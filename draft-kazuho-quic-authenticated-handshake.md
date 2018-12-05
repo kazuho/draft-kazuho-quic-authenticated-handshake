@@ -111,6 +111,26 @@ interpreted as described in [RFC2119].
 The long header packets exchanged using this specification carry the QUIC
 version number of 0xXXXXXXXX (TBD).
 
+# The "QUIC-ESNI" TLS Extension
+
+The QUIC-ESNI TLS Extension indicates the server-supported QUIC versions that
+use the Encrypted SNI exntension in a way that affects the QUIC transport
+layer.
+
+~~~
+   struct {
+       uint32 supported_versions<4..2^16-4>;
+   } QUIC_ESNI;
+~~~
+
+A server willing to accept QUIC connections using this specification MUST
+publish ESNI Resource Records that contain the QUIC_ESNI extension including
+the QUIC version number 0xXXXXXXXX.
+
+A client MUST NOT initiate a connection establishment attempt specified in
+this document unless it sees a compatible version number in the QUIC_ESNI
+extension of the ESNI Resource Record advertised by the server.
+
 # Initial Packet Authentication Secret
 
 QUIC version 1 uses the packet header as the AAD input of the packet
@@ -124,6 +144,14 @@ derived from the shared ESNI secret using the following computation:
 ~~~
 
 AAD for other types of packets are identical to that of QUIC version 1.
+
+# Ignoring Version Negotiation Packet
+
+A client MUST ignore a Version Negotiation packet received in response.
+
+If the client does not receive a valid Initial packet from server after
+repeatedly retransmitting it's Initial packets, it MAY choose different
+strategies based on the receipt of (or lack of) Version Negotiation packets.
 
 # Considerations
 
@@ -152,8 +180,8 @@ packet can be verified using the ordinary procedure of AEAD.
 
 For this specification, use of a different QUIC version number is not expected
 to have negative impact on user-experience by raising the chance of version
-negotiation, assuming that the distribution of the ESNI key implies that the
-QUIC server supports this specification.
+negotiation, because version negotiation finishes before the client sends it's
+first packet.
 
 Use of Encrypted SNI will stick out more, because version number is an
 unobfuscated field that exists at the front of the packet.
