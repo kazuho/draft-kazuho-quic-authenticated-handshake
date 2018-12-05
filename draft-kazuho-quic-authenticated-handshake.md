@@ -131,7 +131,7 @@ A client MUST NOT initiate a connection establishment attempt specified in
 this document unless it sees a compatible version number in the QUIC_ESNI
 extension of the ESNI Resource Record advertised by the server.
 
-# Initial Packet Authentication Secret
+# Construction of Authenticated Additional Data
 
 QUIC version 1 uses the packet header as the AAD input of the packet
 protection.  In this variant, the AAD used for the Initial packet is an
@@ -145,13 +145,11 @@ derived from the shared ESNI secret using the following computation:
 
 AAD for other types of packets are identical to that of QUIC version 1.
 
-# Ignoring Version Negotiation Packet
+# Handling of Version Negotiation Packet
 
-A client MUST ignore a Version Negotiation packet received in response.
-
-If the client does not receive a valid Initial packet from server after
-repeatedly retransmitting it's Initial packets, it MAY choose different
-strategies based on the receipt of (or lack of) Version Negotiation packets.
+A client MUST ignore a Version Negotiation packet received in response.  When
+the client gives up of establishing a connection, it MAY report the failure
+differently based on the receipt of (or lack of) Version Negotiation packets.
 
 # Considerations
 
