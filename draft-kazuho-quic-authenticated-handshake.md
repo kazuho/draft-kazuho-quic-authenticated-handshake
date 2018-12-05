@@ -163,10 +163,10 @@ decrypt the packet payload, derive the shared ESNI secret and the Initial
 packet authentication secret from the contained Client Hello message, then
 validate the AEAD tag.
 
-We can consider using AES-CTR for Initial packet payload and HMAC for
-authentication, at the cost of diverging further from QUIC version 1. Using a
-hash function that is selected by the ESNI key exchange might be more generic
-than relying on GCM for authentication.
+We can consider using AES-CTR for encryption and HMAC for authentication. Use
+of a hash function that is selected by the ESNI key exchange can be considered
+to be more generic than relying on GCM for authentication.  The flip side is
+that it would be a bigger diversion from QUIC version 1.
 
 We can also consider adding a small checksum to the Initial packets so that
 the server can determine if the packet is corrupt. The downside is that the
