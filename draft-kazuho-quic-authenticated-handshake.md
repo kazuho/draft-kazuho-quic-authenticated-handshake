@@ -5,7 +5,7 @@ category: exp
 
 ipr: trust200902
 area: Transport
-workgroup: quic
+workgroup: QUIC
 keyword: Internet-Draft
 
 stand_alone: yes
