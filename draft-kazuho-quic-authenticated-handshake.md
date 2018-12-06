@@ -97,8 +97,8 @@ a shared secret between the endpoints can be used for authentication from the
 very first packet of the connection.
 
 This document introduces an additional authenticated data (AAD) construction
-that includes a secret value derived from the ESNI shared secret so that third
-parties cannot inject or alter the packets.
+that incorporates a secret value derived from the ESNI shared secret so that
+spoofed packets can be detected and dropped.
 
 ## Notational Conventions
 
