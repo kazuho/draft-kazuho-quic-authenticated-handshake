@@ -120,9 +120,9 @@ version number of 0xXXXXXXXX (TBD).
 
 ## The "QUIC-ESNI" TLS Extension
 
-The QUIC-ESNI TLS Extension indicates the server-supported QUIC versions that
-use the Encrypted SNI exntension in a way that affects the QUIC transport
-layer.
+The QUIC-ESNI TLS Extension indicates the versions of the QUIC protocol that
+the server supports.  The values in the extension SHOULD be identical to what
+would be included in the Version Negotiation packet.
 
 ~~~
    struct {
