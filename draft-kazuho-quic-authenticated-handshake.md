@@ -100,22 +100,25 @@ This document introduces an additional authenticated data (AAD) construction
 that incorporates a secret value derived from the ESNI shared secret so that
 spoofed packets can be detected and dropped.
 
-The document describes the changes from QUIC version 1.  Implementations MUST
-conform to the specifications of QUIC version 1 unless a different behavior is
-defined within this document.
-
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in [RFC2119].
 
-# Protocol Version Number
+# Differences from QUIC version 1
+
+The document describes the changes from QUIC version 1.
+
+Implementations MUST conform to the specifications of QUIC version 1 unless a
+different behavior is defined in this document.
+
+## Protocol Version Number
 
 The long header packets exchanged using this specification carry the QUIC
 version number of 0xXXXXXXXX (TBD).
 
-# The "QUIC-ESNI" TLS Extension
+## The "QUIC-ESNI" TLS Extension
 
 The QUIC-ESNI TLS Extension indicates the server-supported QUIC versions that
 use the Encrypted SNI exntension in a way that affects the QUIC transport
@@ -135,7 +138,7 @@ A client MUST NOT initiate a connection establishment attempt specified in
 this document unless it sees a compatible version number in the QUIC_ESNI
 extension of the ESNI Resource Record advertised by the server.
 
-# Construction of Authenticated Additional Data
+## Construction of Authenticated Additional Data
 
 QUIC version 1 uses the packet header as the AAD input of the packet
 protection.  In this variant, the AAD used for the Initial packet is an
@@ -149,13 +152,13 @@ derived from the shared ESNI secret using the following computation:
 
 AAD for other types of packets are identical to that of QUIC version 1.
 
-# Version Negotiation Packet
+## Version Negotiation Packet
 
 A client MUST ignore a Version Negotiation packet received in response.  When
 the client gives up of establishing a connection, it MAY report the failure
 differently based on the receipt of (or lack of) Version Negotiation packets.
 
-# Retry Packet
+## Retry Packet
 
 A client SHOULD send Initial packets in response to every Retry packet it
 receives.  When the client does not see a response within one retransmission
