@@ -145,11 +145,19 @@ derived from the shared ESNI secret using the following computation:
 
 AAD for other types of packets are identical to that of QUIC version 1.
 
-# Handling of Version Negotiation Packet
+# Version Negotiation Packet
 
 A client MUST ignore a Version Negotiation packet received in response.  When
 the client gives up of establishing a connection, it MAY report the failure
 differently based on the receipt of (or lack of) Version Negotiation packets.
+
+# Retry Packet
+
+A client SHOULD send Initial packets in response to every Retry packet it
+receives.  When the client does not see a response within one retransmission
+timeout, it SHOULD either send the Initial packets corresponding to each Retry
+packets that received, or reinitiate the connection attempt by sending an
+Initial packet without a retry token.
 
 # Considerations
 
