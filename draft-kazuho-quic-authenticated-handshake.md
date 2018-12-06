@@ -164,7 +164,7 @@ A client SHOULD send an Initial packet in response to each Retry packet it
 receives.  Payload of the CRYPTO frame contained in the resent Initial packets
 MUST be identical to that of the Initial packet that triggered the retry.
 
-The client MUST send at least one Initial packet containing one of the tokens
+The client SHOULD send at least one Initial packet containing one of the tokens
 that it received when it does not receive a valid Initial packet before the
 handshake timeout.
 
