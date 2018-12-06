@@ -166,7 +166,8 @@ MUST be identical to that of the Initial packet that triggered the retry.
 
 The client SHOULD send at least one Initial packet containing one of the tokens
 that it received when it does not receive a valid Initial packet before the
-handshake timeout.
+handshake timeout.  Unless the packet gets lost, the retransmission would
+trigger the server to send either a valid Initial packet or a Retry packet.
 
 # Considerations
 
