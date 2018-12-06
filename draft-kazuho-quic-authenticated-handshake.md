@@ -100,6 +100,10 @@ This document introduces an additional authenticated data (AAD) construction
 that incorporates a secret value derived from the ESNI shared secret so that
 spoofed packets can be detected and dropped.
 
+The document describes the changes from QUIC version 1.  Implementations MUST
+conform to the specifications of QUIC version 1 unless a different behavior is
+defined within this document.
+
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
