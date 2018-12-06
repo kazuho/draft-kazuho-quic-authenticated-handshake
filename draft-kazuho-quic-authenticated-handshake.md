@@ -138,7 +138,7 @@ A client MUST NOT initiate a connection establishment attempt specified in
 this document unless it sees a compatible version number in the QUIC_ESNI
 extension of the ESNI Resource Record advertised by the server.
 
-## Construction of Authenticated Additional Data
+## Construction of Additional Authenticated Data
 
 QUIC version 1 uses the packet header as the AAD input of the packet
 protection.  In this variant, the AAD used for the Initial packet is an
