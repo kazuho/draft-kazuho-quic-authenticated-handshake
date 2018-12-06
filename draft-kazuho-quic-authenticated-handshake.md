@@ -171,7 +171,7 @@ trigger the server to send either a valid Initial packet or a Retry packet.
 
 # Considerations
 
-## Abnormal Use of AEAD cipher
+## Atypical Use of AEAD
 
 The design principle of AEAD is to provide authentication and encryption as a
 single function.
