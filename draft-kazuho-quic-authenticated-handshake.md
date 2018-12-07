@@ -169,6 +169,14 @@ that it received when it does not receive a valid Initial packet before the
 handshake timeout.  Unless the packet gets lost, the retransmission would
 trigger the server to send either a valid Initial packet or a Retry packet.
 
+To a server, the behavior of a client under attack would look like it is
+aggressively retransmitting Initial packets, some of them containing invalid
+tokens.
+
+Therefore, a server MUST NOT terminate the connection when it receives an
+Initial packet that contains an invalid token.  Instead, it SHOULD either
+process the packet as if it did not contain a token, or send a Retry.
+
 # Considerations
 
 ## Atypical Use of AEAD
