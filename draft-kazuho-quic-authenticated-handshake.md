@@ -213,6 +213,27 @@ first packet.
 Use of Encrypted SNI will stick out more, because version number is an
 unobfuscated field that exists at the front of the packet.
 
+## No Support for Split Mode
+
+Under the design discussed in this document, it is impossible to use an
+unmodified QUIC server as a backend server in "Split Mode" ([TLS-ESNI];
+section 3) due to the following two reasons:
+
+* Access to initial_auth_secret is required for generating and validating
+  Initial packets.  However, the backend server, not knowing the ESNI private
+  key, cannot calculate the secret.
+
+* The client-facing server cannot continue forwarding packets to the correct
+  destination when there is a change in Connection ID mid-connection.
+
+To address the issues, we might consider specifying a protocol that will be
+used between the client-facing server and the backend server for communicating
+the initial_auth_secret and the spare Connection IDs.  Note that such protocol
+can be lightweight, assuming the communication between the two servers will be
+over a virtual private network.  Such assumption can be made because the
+backend server cannot operate QUIC without access to the source address-port
+tuple of the packets that the client has sent.
+
 # Security Considerations
 
 TBD
