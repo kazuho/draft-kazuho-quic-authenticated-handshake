@@ -154,9 +154,9 @@ AAD for other types of packets are identical to that of QUIC version 1.
 
 ## Version Negotiation Packet
 
-A client MUST ignore a Version Negotiation packet received in response.  When
-the client gives up of establishing a connection, it MAY report the failure
-differently based on the receipt of (or lack of) Version Negotiation packets.
+A client MUST ignore Version Negotiation packets.  When the client gives up of
+establishing a connection, it MAY report the failure differently based on the
+receipt of (or lack of) Version Negotiation packets.
 
 ## Retry Packet
 
