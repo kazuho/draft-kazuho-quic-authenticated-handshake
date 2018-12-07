@@ -163,11 +163,11 @@ receipt of (or lack of) Version Negotiation packets.
 A client SHOULD send an Initial packet in response to each Retry packet it
 receives.  Payload of the CRYPTO frame contained in the resent Initial packets
 MUST be identical to that of the Initial packet that triggered the retry.
-
-The client SHOULD send at least one Initial packet containing one of the tokens
-that it received when it does not receive a valid Initial packet before the
-handshake timeout.  Unless the packet gets lost, the retransmission would
-trigger the server to send either a valid Initial packet or a Retry packet.
+When the client does not receive a valid Initial packet after a handshake
+timeout, it SHOULD send at least one Initial packet containing one of the
+tokens that it has received.  Unless the packet gets lost, the retransmission
+would trigger the server to send either a valid Initial packet or a Retry
+packet.
 
 To a server, the behavior of a client under attack would look like it is
 aggressively retransmitting Initial packets, some of them containing invalid
@@ -176,6 +176,9 @@ tokens.
 Therefore, a server MUST NOT terminate the connection when it receives an
 Initial packet that contains an invalid token.  Instead, it SHOULD either
 process the packet as if it did not contain a token, or send a Retry.
+
+A client MUST ignore Retry packets received anterior to an Initial packet that
+successfully authenticates.
 
 # Considerations
 
