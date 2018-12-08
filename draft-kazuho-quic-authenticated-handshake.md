@@ -17,6 +17,11 @@ author:
     name: Kazuho Oku
     org: Fastly
     email: kazuhooku@gmail.com
+  -
+    ins: C. Huitema
+    name: Christian Huitema
+    org: Private Octopus Inc.
+    email: huitema@huitema.net
 
 normative:
   RFC2104:
