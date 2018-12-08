@@ -19,6 +19,7 @@ author:
     email: kazuhooku@gmail.com
 
 normative:
+  RFC2104:
   RFC2119:
   RFC8446:
   QUIC-TRANSPORT:
@@ -96,9 +97,9 @@ However, when Encrypted Server Name Indication for TLS 1.3 [TLS-ESNI] is used,
 a shared secret between the endpoints can be used for authentication from the
 very first packet of the connection.
 
-This document introduces an additional authenticated data (AAD) construction
-that incorporates a secret value derived from the ESNI shared secret so that
-spoofed packets can be detected and dropped.
+This document defines a Packet Protection method for Initial packets that
+incorporates the ESNI shared secret, so that spoofed Initial packets will be
+detected and droped.
 
 ## Notational Conventions
 
@@ -138,19 +139,31 @@ A client MUST NOT initiate a connection establishment attempt specified in
 this document unless it sees a compatible version number in the QUIC_ESNI
 extension of the ESNI Resource Record advertised by the server.
 
-## Construction of Additional Authenticated Data
+## Initial Packet Protection
 
-QUIC version 1 uses the packet header as the AAD input of the packet
-protection.  In this variant, the AAD used for the Initial packet is an
-concatenation of the packet header and an authentication secret that is
-derived from the shared ESNI secret using the following computation:
+Initial packets are encrypted and authenticated differently from QUIC version
+1.
+
+AES {{!AES=DOI.10.6028/NIST.FIPS.197}} in counter (CTR) mode is used for
+encrypting the payload.  The key and iv being used are identical to that of
+QUIC version 1.
+
+HMAC [RFC2104] is used for authenticating the header.  The message being
+authenticated is the concatenation of the packet header without Header
+Protection and the payload in cleartext.  The underlying hash function being
+used is the one selected for encrypting the Encrypted SNI extension.  The HMAC
+key is calculated using the following formula:
 
 ~~~
-   initial_auth_secret = HKDF-Expand-Label(Zx, "quic initial auth",
-                                           Hash(ESNIContents), 16)
+   hmac_key = HKDF-Expand-Label(Zx, "quic initial auth", Hash(ESNIContents),
+                                digest_size)
 ~~~
 
-AAD for other types of packets are identical to that of QUIC version 1.
+The first sixteen (16) octets of the HMAC output replaces the authentication
+tag of QUIC version 1.
+
+Other types of packets are protected using the Packet Protection method
+defined in QUIC version 1.
 
 ## Version Negotiation Packet
 
@@ -182,20 +195,21 @@ successfully authenticates.
 
 # Considerations
 
-## Atypical Use of AEAD
+## Using GCM to Authenticate Initial Packets
 
-The design principle of AEAD is to provide authentication and encryption as a
-single function.
+An alternative approach to using the combination of AES-CTR and HMAC is to
+continue using AES-GCM.  In such approach, the additional authenticated data
+(AAD) will incorporate the ESNI shared secret to detect spoofed or broken
+packets.
 
-The proposed approach goes against the principle. A server is expected to
-decrypt the packet payload, derive the shared ESNI secret and the Initial
-packet authentication secret from the contained Client Hello message, then
-validate the AEAD tag.
+A server that receives an Initial packet for a new connection will at first
+decrypt the payload using AES-CTR, derive ESNI shared secret from the Hello
+message being contained, then use that to verify the GCM tag.
 
-We can consider using AES-CTR for encryption and HMAC for authentication. Use
-of a hash function that is selected by the ESNI key exchange can be considered
-to be more generic than relying on GCM for authentication.  The flip side is
-that it would be a bigger diversion from QUIC version 1.
+The benefit of the approach is that we will have less divergence from QUIC
+version 1.  The downside is that the authentication algorithm would be
+hard-coded to GCM, and that some AEAD APIs might not provide an interface to
+handle input in this particular way.
 
 We can also consider adding a small checksum to the Initial packets so that
 the server can determine if the packet is corrupt. The downside is that the
