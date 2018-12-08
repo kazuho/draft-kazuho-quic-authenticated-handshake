@@ -171,6 +171,42 @@ A client MUST ignore Version Negotiation packets.  When the client gives up of
 establishing a connection, it MAY report the failure differently based on the
 receipt of (or lack of) Version Negotiation packets.
 
+## Connection Close Packet
+
+A Connection Close packet shares a long packet header with a type value of 0x3
+with the Retry packet.  The two types of packets are identified by the lower
+4-bits of the first octet.  The packet is a Connection Close packet if all the
+bits are set to zero.  Otherwise, the packet is a Retry packet.
+
+~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+
+|1|1| 3 |   0   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Version (32)                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|DCIL(4)|SCIL(4)|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               Destination Connection ID (0/32..144)         ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                 Source Connection ID (0/32..144)            ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Error Code (16)     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~
+(: #connection-close-format title="Connection Close Packet")
+
+A Connection Close packet is sent by a server when a connection error occurs
+prior to deriving the HMAC key.  In all other conditions, connection close
+MUST be signalled using the CONNECTION_CLOSE frame.
+
+A client that receives a Connection Close packet before an Initial packet
+SHOULD retain the error code, and continue the connection establishment
+attempt as if it did not see the packet.  When the attempt times out, it MAY
+assume that the error code was a legitimate value sent by the server.  A
+client MAY ignore Connection Close packets.
+
 ## Retry Packet
 
 A client SHOULD send an Initial packet in response to each Retry packet it
