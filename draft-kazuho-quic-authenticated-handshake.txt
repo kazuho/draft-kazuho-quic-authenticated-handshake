@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: June 13, 2019                              Private Octopus Inc.
-                                                       December 10, 2018
+Expires: June 12, 2019                              Private Octopus Inc.
+                                                       December 09, 2018
 
 
                     Authenticated Handshake for QUIC
@@ -26,14 +26,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 13, 2019.
+   This Internet-Draft will expire on June 12, 2019.
 
 Copyright Notice
 
@@ -42,7 +42,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 1]
+Oku & Huitema             Expires June 12, 2019                 [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 2]
+Oku & Huitema             Expires June 12, 2019                 [Page 2]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -165,7 +165,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 3]
+Oku & Huitema             Expires June 12, 2019                 [Page 3]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -221,7 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 4]
+Oku & Huitema             Expires June 12, 2019                 [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 5]
+Oku & Huitema             Expires June 12, 2019                 [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 6]
+Oku & Huitema             Expires June 12, 2019                 [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 7]
+Oku & Huitema             Expires June 12, 2019                 [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -420,13 +420,13 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
-              DOI 10.17487/RFC2104, February 1997, <https://www.rfc-
-              editor.org/info/rfc2104>.
+              DOI 10.17487/RFC2104, February 1997,
+              <https://www.rfc-editor.org/info/rfc2104>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
@@ -445,7 +445,7 @@ Authors' Addresses
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 8]
+Oku & Huitema             Expires June 12, 2019                 [Page 8]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -501,4 +501,4 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 9]
+Oku & Huitema             Expires June 12, 2019                 [Page 9]
