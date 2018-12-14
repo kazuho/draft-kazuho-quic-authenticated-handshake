@@ -1,6 +1,6 @@
 ---
 title: Authenticated Handshake for QUIC
-docname: draft-kazuho-quic-authenticated-handshake-latest
+docname: draft-kazuho-quic-authenticated-handshake-00
 category: exp
 
 ipr: trust200902
@@ -30,7 +30,8 @@ normative:
   QUIC-TRANSPORT:
     title: "QUIC: A UDP-Based Multiplexed and Secure Transport"
     seriesinfo:
-      Internet-Draft: draft-ietf-quic-transport-latest
+      Internet-Draft: draft-ietf-quic-transport-16
+    date: 2018-10-23
     author:
       -
         ins: J. Iyengar
@@ -45,7 +46,8 @@ normative:
   QUIC-TLS:
     title: "Using Transport Layer Security (TLS) to Secure QUIC"
     seriesinfo:
-      Internet-Draft: draft-ietf-quic-tls-latest
+      Internet-Draft: draft-ietf-quic-tls-16
+    date: 2018-10-23
     author:
       -
         ins: M. Thomson
@@ -60,7 +62,8 @@ normative:
   TLS-ESNI:
     title: Encrypted Server Name Indication for TLS 1.3
     seriesinfo:
-      Internet-Draft: draft-ietf-tls-esni-latest
+      Internet-Draft: draft-ietf-tls-esni-02
+    date: 2018-10-22
     author:
       -
         ins: E. Rescorla
