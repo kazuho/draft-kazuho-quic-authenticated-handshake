@@ -5,12 +5,12 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: June 13, 2019                              Private Octopus Inc.
-                                                       December 10, 2018
+Expires: June 17, 2019                              Private Octopus Inc.
+                                                       December 14, 2018
 
 
                     Authenticated Handshake for QUIC
-            draft-kazuho-quic-authenticated-handshake-latest
+              draft-kazuho-quic-authenticated-handshake-00
 
 Abstract
 
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 13, 2019.
+   This Internet-Draft will expire on June 17, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 1]
+Oku & Huitema             Expires June 17, 2019                 [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 2]
+Oku & Huitema             Expires June 17, 2019                 [Page 2]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -165,7 +165,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 3]
+Oku & Huitema             Expires June 17, 2019                 [Page 3]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -221,7 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 4]
+Oku & Huitema             Expires June 17, 2019                 [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 5]
+Oku & Huitema             Expires June 17, 2019                 [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 6]
+Oku & Huitema             Expires June 17, 2019                 [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 7]
+Oku & Huitema             Expires June 17, 2019                 [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -410,13 +410,13 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    [QUIC-TLS]
               Thomson, M., Ed. and S. Turner, Ed., "Using Transport
-              Layer Security (TLS) to Secure QUIC", draft-ietf-quic-tls-
-              latest (work in progress), n.d..
+              Layer Security (TLS) to Secure QUIC", draft-ietf-quic-
+              tls-16 (work in progress), October 2018.
 
    [QUIC-TRANSPORT]
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", draft-ietf-quic-
-              transport-latest (work in progress), n.d..
+              transport-16 (work in progress), October 2018.
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -435,7 +435,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    [TLS-ESNI]
               Rescorla, E., Oku, K., Sullivan, N., and C. Wood,
               "Encrypted Server Name Indication for TLS 1.3", draft-
-              ietf-tls-esni-latest (work in progress), n.d..
+              ietf-tls-esni-02 (work in progress), October 2018.
 
 Authors' Addresses
 
@@ -445,7 +445,7 @@ Authors' Addresses
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 8]
+Oku & Huitema             Expires June 17, 2019                 [Page 8]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -501,4 +501,4 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 13, 2019                 [Page 9]
+Oku & Huitema             Expires June 17, 2019                 [Page 9]
