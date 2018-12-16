@@ -1,0 +1,652 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Authenticated Handshake for QUIC</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+
+body {
+  font: 16px "Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 24px;
+  margin: 75px auto;
+  max-width: 624px;
+  padding: 0 5px;
+}
+
+.title, .filename, h1, h2, h3, h4, h5 {
+  font: 16px "Roboto Condensed","Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: bold;
+  color: #333;
+  line-height: 100%;
+  margin: 1.2em 0 0.3em;
+}
+.title, #rfc\.title h1 { font-size: 32px; }
+h1, section h1, h2, section h2, section h3, nav h2 { font-size: 20px; }
+h3, section h4, h4, section h5 { font-size: 16px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header, table#rfc\.headerblock {
+  width: 100%;
+}
+table.header td, table#rfc\.headerblock td {
+  border: none;
+  background-color: transparent;
+  color: black;
+  padding: 0;
+}
+.filename {
+  display: block;
+  color: rgb(119, 119, 119);
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 100%;
+  margin: 10px 0 32px;
+}
+#rfc\.abstract+p, #rfc\.abstract p {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+samp, tt, code, pre {
+  font: 13.5px Consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure, caption {
+  font-style: italic;
+  margin: 0 1.5em;
+  text-align: left;
+}
+
+address {
+  margin: 16px 2px;
+  line-height: 20px;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn, address b {
+  font-weight: normal;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+p, ol, ul, li {
+  padding: 0;
+}
+p {
+  margin: 0.5em 0;
+}
+ol, ul {
+  margin: 0.2em 0 0.2em 2em;
+}
+li {
+  margin: 0.2em 0;
+}
+address {
+  font-style: normal;
+}
+
+ul.toc ul {
+  margin: 0 0 0 2em;
+}
+ul.toc li {
+  list-style: none;
+  margin: 0;
+}
+
+@media screen and (min-width: 924px) {
+  body {
+    padding-right: 350px;
+  }
+  body>ul.toc, body>#rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 500px);
+    width: 300px;
+    z-index: 1;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>#rfc\.toc {
+    top: 55px;
+  }
+  body>ul.toc {
+    top: 100px;
+  }
+
+  ul.toc {
+    margin: 0 0 0 4px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  ul.toc ul {
+    margin-left: 1.2em;
+  }
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+  /*]]>*/</style>
+  <meta name="viewport" content="initial-scale=1.0">
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Notational Conventions">
+<link href="#rfc.section.2" rel="Chapter" title="2 Differences from QUIC version 1">
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Protocol Version Number">
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 The &#8220;QUIC-ESNI&#8221; TLS Extension">
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Initial Packet">
+<link href="#rfc.section.2.3.1" rel="Chapter" title="2.3.1 Mapping to Connections">
+<link href="#rfc.section.2.3.2" rel="Chapter" title="2.3.2 Protection">
+<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Version Negotiation Packet">
+<link href="#rfc.section.2.5" rel="Chapter" title="2.5 Connection Close Packet">
+<link href="#rfc.section.2.6" rel="Chapter" title="2.6 Retry Packet">
+<link href="#rfc.section.3" rel="Chapter" title="3 Considerations">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Using GCM to Authenticate Initial Packets">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Use of Different QUIC Version Number">
+<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Trial Decryption">
+<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Rekeying at the Server&#8217;s First Flight">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 No Support for Split Mode">
+<link href="#rfc.section.4" rel="Chapter" title="4 Security Considerations">
+<link href="#rfc.section.5" rel="Chapter" title="5 IANA Considerations">
+<link href="#rfc.section.6" rel="Chapter" title="6 Acknowledgements">
+<link href="#rfc.section.7" rel="Chapter" title="7 Change Log">
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Since draft-kazuho-quic-authenticated-handshake-00">
+<link href="#rfc.references" rel="Chapter" title="8 Normative References">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.15.3 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Oku, K. and C. Huitema" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-kazuho-quic-authenticated-handshake-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-12-16" />
+  <meta name="dct.abstract" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
+  <meta name="description" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">QUIC</td>
+<td class="right">K. Oku</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">Fastly</td>
+</tr>
+<tr>
+<td class="left">Intended status: Experimental</td>
+<td class="right">C. Huitema</td>
+</tr>
+<tr>
+<td class="left">Expires: June 19, 2019</td>
+<td class="right">Private Octopus Inc.</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">December 16, 2018</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Authenticated Handshake for QUIC<br />
+  <span class="filename">draft-kazuho-quic-authenticated-handshake-latest</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on June 19, 2019.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Notational Conventions</a>
+</li>
+</ul><li>2.   <a href="#rfc.section.2">Differences from QUIC version 1</a>
+</li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Protocol Version Number</a>
+</li>
+<li>2.2.   <a href="#rfc.section.2.2">The &#8220;QUIC-ESNI&#8221; TLS Extension</a>
+</li>
+<li>2.3.   <a href="#rfc.section.2.3">Initial Packet</a>
+</li>
+<ul><li>2.3.1.   <a href="#rfc.section.2.3.1">Mapping to Connections</a>
+</li>
+<li>2.3.2.   <a href="#rfc.section.2.3.2">Protection</a>
+</li>
+</ul><li>2.4.   <a href="#rfc.section.2.4">Version Negotiation Packet</a>
+</li>
+<li>2.5.   <a href="#rfc.section.2.5">Connection Close Packet</a>
+</li>
+<li>2.6.   <a href="#rfc.section.2.6">Retry Packet</a>
+</li>
+</ul><li>3.   <a href="#rfc.section.3">Considerations</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Using GCM to Authenticate Initial Packets</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">Use of Different QUIC Version Number</a>
+</li>
+<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Trial Decryption</a>
+</li>
+<li>3.2.2.   <a href="#rfc.section.3.2.2">Rekeying at the Server&#8217;s First Flight</a>
+</li>
+</ul><li>3.3.   <a href="#rfc.section.3.3">No Support for Split Mode</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Security Considerations</a>
+</li>
+<li>5.   <a href="#rfc.section.5">IANA Considerations</a>
+</li>
+<li>6.   <a href="#rfc.section.6">Acknowledgements</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Change Log</a>
+</li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Since draft-kazuho-quic-authenticated-handshake-00</a>
+</li>
+</ul><li>8.   <a href="#rfc.references">Normative References</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">As defined in Secure Using TLS to Secure QUIC <a href="#QUIC-TLS" class="xref">[QUIC-TLS]</a>, QUIC version 1 <a href="#QUIC-TRANSPORT" class="xref">[QUIC-TRANSPORT]</a> protects the payload of every QUIC packet using AEAD making the protocol injection- and tamper-proof, with the exception being the Initial packets.  Initial packets are merely obfuscated because there is no shared secret between the endpoints when they start sending the Initial packets against each other.</p>
+<p id="rfc.section.1.p.2">However, when Encrypted Server Name Indication for TLS 1.3 <a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a> is used, a shared secret between the endpoints can be used for authentication from the very first packet of the connection.</p>
+<p id="rfc.section.1.p.3">This document defines a Packet Protection method for Initial packets that incorporates the ESNI shared secret, so that spoofed Initial packets will be detected and droped.</p>
+<h1 id="rfc.section.1.1">
+<a href="#rfc.section.1.1">1.1.</a> <a href="#notational-conventions" id="notational-conventions">Notational Conventions</a>
+</h1>
+<p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119" class="xref">[RFC2119]</a>.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#differences-from-quic-version-1" id="differences-from-quic-version-1">Differences from QUIC version 1</a>
+</h1>
+<p id="rfc.section.2.p.1">The document describes the changes from QUIC version 1.</p>
+<p id="rfc.section.2.p.2">Implementations MUST conform to the specifications of QUIC version 1 unless a different behavior is defined in this document.</p>
+<h1 id="rfc.section.2.1">
+<a href="#rfc.section.2.1">2.1.</a> <a href="#protocol-version-number" id="protocol-version-number">Protocol Version Number</a>
+</h1>
+<p id="rfc.section.2.1.p.1">The long header packets exchanged using this specification carry the QUIC version number of 0xXXXXXXXX (TBD).</p>
+<h1 id="rfc.section.2.2">
+<a href="#rfc.section.2.2">2.2.</a> <a href="#the-quic-esni-tls-extension" id="the-quic-esni-tls-extension">The &#8220;QUIC-ESNI&#8221; TLS Extension</a>
+</h1>
+<p id="rfc.section.2.2.p.1">The QUIC-ESNI TLS Extension indicates the versions of the QUIC protocol that the server supports.  The values in the extension SHOULD be identical to what would be included in the Version Negotiation packet.</p>
+<pre>
+   struct {
+       uint32 supported_versions&lt;4..2^16-4&gt;;
+   } QUIC_ESNI;
+</pre>
+<p id="rfc.section.2.2.p.2">A server willing to accept QUIC connections using this specification MUST publish ESNI Resource Records that contain the QUIC_ESNI extension including the QUIC version number 0xXXXXXXXX.</p>
+<p id="rfc.section.2.2.p.3">A client MUST NOT initiate a connection establishment attempt specified in this document unless it sees a compatible version number in the QUIC_ESNI extension of the ESNI Resource Record advertised by the server.</p>
+<h1 id="rfc.section.2.3">
+<a href="#rfc.section.2.3">2.3.</a> <a href="#initial-packet" id="initial-packet">Initial Packet</a>
+</h1>
+<h1 id="rfc.section.2.3.1">
+<a href="#rfc.section.2.3.1">2.3.1.</a> <a href="#mapping-to-connections" id="mapping-to-connections">Mapping to Connections</a>
+</h1>
+<p id="rfc.section.2.3.1.p.1">A server associates an Initial packet to an existing connection using the Destination Connection ID and the five tuple.  If they both match to that of an existing connection, the packet is processed accordingly.  Otherwise, a server MUST handle the packet as potentially creating a new connection.</p>
+<h1 id="rfc.section.2.3.2">
+<a href="#rfc.section.2.3.2">2.3.2.</a> <a href="#protection" id="protection">Protection</a>
+</h1>
+<p id="rfc.section.2.3.2.p.1">Initial packets are encrypted and authenticated differently from QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.2">AES <a href="#AES" class="xref">[AES]</a> in counter (CTR) mode is used for encrypting the payload.  The key and iv being used are identical to that of QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.3">HMAC <a href="#RFC2104" class="xref">[RFC2104]</a> is used for authenticating the header.  The message being authenticated is the concatenation of the packet header without Header Protection and the payload in cleartext.  The underlying hash function being used is the one selected for encrypting the Encrypted SNI extension.  The HMAC key is calculated using the following formula, where Zx is the extracted DH shared secret of Encrypted SNI:</p>
+<pre>
+   hmac_key = HKDF-Expand-Label(Zx, "quic initial auth", Hash(ESNIContents),
+                                digest_size)
+</pre>
+<p id="rfc.section.2.3.2.p.4">The first sixteen (16) octets of the HMAC output replaces the authentication tag of QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.5">Other types of packets are protected using the Packet Protection method defined in QUIC version 1.</p>
+<h1 id="rfc.section.2.4">
+<a href="#rfc.section.2.4">2.4.</a> <a href="#version-negotiation-packet" id="version-negotiation-packet">Version Negotiation Packet</a>
+</h1>
+<p id="rfc.section.2.4.p.1">A client MUST ignore Version Negotiation packets.  When the client gives up of establishing a connection, it MAY report the failure differently based on the receipt of (or lack of) Version Negotiation packets.</p>
+<h1 id="rfc.section.2.5">
+<a href="#rfc.section.2.5">2.5.</a> <a href="#connection-close-packet" id="connection-close-packet">Connection Close Packet</a>
+</h1>
+<p id="rfc.section.2.5.p.1">A Connection Close packet shares a long packet header with a type value of 0x3 with the Retry packet.  The two types of packets are identified by the lower 4-bits of the first octet.  The packet is a Connection Close packet if all the bits are set to zero.  Otherwise, the packet is a Retry packet.</p>
+<pre>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+
+|1|1| 3 |   0   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Version (32)                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|DCIL(4)|SCIL(4)|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               Destination Connection ID (0/32..144)         ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                 Source Connection ID (0/32..144)            ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Error Code (16)     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.2.5.p.2">(: #connection-close-format title=&#8221;Connection Close Packet&#8221;)</p>
+<p id="rfc.section.2.5.p.3">A Connection Close packet is sent by a server when a connection error occurs prior to deriving the HMAC key.  In all other conditions, connection close MUST be signalled using the CONNECTION_CLOSE frame.</p>
+<p id="rfc.section.2.5.p.4">A client that receives a Connection Close packet before an Initial packet SHOULD retain the error code, and continue the connection establishment attempt as if it did not see the packet.  When the attempt times out, it MAY assume that the error code was a legitimate value sent by the server.  A client MAY ignore Connection Close packets.</p>
+<h1 id="rfc.section.2.6">
+<a href="#rfc.section.2.6">2.6.</a> <a href="#retry-packet" id="retry-packet">Retry Packet</a>
+</h1>
+<p id="rfc.section.2.6.p.1">A client SHOULD send an Initial packet in response to each Retry packet it receives.  Payload of the CRYPTO frame contained in the resent Initial packets MUST be identical to that of the Initial packet that triggered the retry.  When the client does not receive a valid Initial packet after a handshake timeout, it SHOULD send at least one Initial packet containing one of the tokens that it has received.  Unless the packet gets lost, the retransmission would trigger the server to send either a valid Initial packet or a Retry packet.</p>
+<p id="rfc.section.2.6.p.2">To a server, the behavior of a client under attack would look like it is aggressively retransmitting Initial packets, some of them containing invalid tokens.</p>
+<p id="rfc.section.2.6.p.3">Therefore, a server MUST NOT terminate the connection when it receives an Initial packet that contains an invalid token.  Instead, it SHOULD either process the packet as if it did not contain a token, or send a Retry.</p>
+<p id="rfc.section.2.6.p.4">A client MUST ignore Retry packets received anterior to an Initial packet that successfully authenticates.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#considerations" id="considerations">Considerations</a>
+</h1>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#using-gcm-to-authenticate-initial-packets" id="using-gcm-to-authenticate-initial-packets">Using GCM to Authenticate Initial Packets</a>
+</h1>
+<p id="rfc.section.3.1.p.1">An alternative approach to using the combination of AES-CTR and HMAC is to continue using AES-GCM.  In such approach, the additional authenticated data (AAD) will incorporate the ESNI shared secret to detect spoofed or broken packets.</p>
+<p id="rfc.section.3.1.p.2">A server that receives an Initial packet for a new connection will at first decrypt the payload using AES-CTR, derive ESNI shared secret from the Hello message being contained, then use that to verify the GCM tag.</p>
+<p id="rfc.section.3.1.p.3">The benefit of the approach is that we will have less divergence from QUIC version 1.  The downside is that the authentication algorithm would be hard-coded to GCM, and that some AEAD APIs might not provide an interface to handle input in this particular way.</p>
+<p id="rfc.section.3.1.p.4">We can also consider adding a small checksum to the Initial packets so that the server can determine if the packet is corrupt. The downside is that the endpoints would be required to calculate the checksum for Initial packets that carry server&#8217;s messages and ACKs as well, even though the correctness of the packet can be verified using the ordinary procedure of AEAD.</p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#use-of-different-quic-version-number" id="use-of-different-quic-version-number">Use of Different QUIC Version Number</a>
+</h1>
+<p id="rfc.section.3.2.p.1">For this specification, use of a different QUIC version number is not expected to have negative impact on user-experience by raising the chance of version negotiation, because version negotiation finishes before the client sends it&#8217;s first packet.</p>
+<p id="rfc.section.3.2.p.2">Use of Encrypted SNI will stick out more, because it can be identified by observing a different version number in the long header packet rather than by decrypting the Initial packet to see if the Encrypted SNI extension is in use.</p>
+<p id="rfc.section.3.2.p.3">The subsections below discuss alternative approaches that do not change the version number of QUIC.</p>
+<h1 id="rfc.section.3.2.1">
+<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#trial-decryption" id="trial-decryption">Trial Decryption</a>
+</h1>
+<p id="rfc.section.3.2.1.p.1">It is possible to use the proposed Packet Protection method without changing the version number.  The difference from the recommended method is that the server would be required to do &#8220;trial decryption.&#8221;</p>
+<p id="rfc.section.3.2.1.p.2">However, it is not as bad as it sounds, because authentication failure in AES-GCM decryption is typically reported after the ciphertext is decrypted.</p>
+<p id="rfc.section.3.2.1.p.3">When accepting a new connection, a QUIC server can at first decrypt the Initial packet using AES-GCM.  The packet is a ordinary QUIC version 1 packet if it is successfully authenticated.  Otherwise, the server will feed the decrypted payload (which would be available anyways) assuming that it contains a ClientHello message, and if the TLS stack successfully processes the message returning the handshake keys and the ESNI shared key, verify the HMAC to see if the packet authenticates.  If it does, the server creates a new connection context and responds with an Initial packet.</p>
+<h1 id="rfc.section.3.2.2">
+<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#rekeying-at-the-servers-first-flight" id="rekeying-at-the-servers-first-flight">Rekeying at the Server&#8217;s First Flight</a>
+</h1>
+<p id="rfc.section.3.2.2.p.1">Another approach is to use the Packet Protection method of QUIC version 1 for client&#8217;s first flight, while using the proposed method for all other Initial packets.</p>
+<p id="rfc.section.3.2.2.p.2">The benefit of this approach is that trial decryption can be avoided.</p>
+<p id="rfc.section.3.2.2.p.3">The downside is that a man-on-the-side attacker can stitch the Encrypted SNI extension that the client has sent with anything it wants to construct a spoofed packet, then race it to the server.</p>
+<p id="rfc.section.3.2.2.p.4">The server would be required to consider Initial packets containing non-identical ClientHello messages as belonging to different connection establishment attempts.</p>
+<p id="rfc.section.3.2.2.p.5">The design will also have negative performance impact on connections with high latency.  This is because QUIC expects clients to retransmit the Initial packets when the latency is above 250 milliseconds.  However, the requirement that the server rekeys the Initial secret when receiving the first Initial packet means that the retransmitted Initial packets would become undecryptable and therefore be deemed lost by the client, reducing the client&#8217;s congestion window size.</p>
+<h1 id="rfc.section.3.3">
+<a href="#rfc.section.3.3">3.3.</a> <a href="#no-support-for-split-mode" id="no-support-for-split-mode">No Support for Split Mode</a>
+</h1>
+<p id="rfc.section.3.3.p.1">Under the design discussed in this document, it is impossible to use an unmodified QUIC server as a backend server in &#8220;Split Mode&#8221; (<a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a>; section 3) due to the following two reasons:</p>
+<p></p>
+
+<ul>
+<li>Access to initial_auth_secret is required for generating and validating Initial packets.  However, the backend server, not knowing the ESNI private key, cannot calculate the secret.</li>
+<li>The client-facing server cannot continue forwarding packets to the correct destination when there is a change in Connection ID mid-connection.</li>
+</ul>
+<p id="rfc.section.3.3.p.3">To address the issues, we might consider specifying a protocol that will be used between the client-facing server and the backend server for communicating the initial_auth_secret and the spare Connection IDs.  Note that such protocol can be lightweight, assuming the communication between the two servers will be over a virtual private network.  Such assumption can be made because the backend server cannot operate QUIC without access to the source address-port tuple of the packets that the client has sent.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.4.p.1">TBD</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+</h1>
+<p id="rfc.section.5.p.1">TBD</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+</h1>
+<p id="rfc.section.6.p.1">TBD</p>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#change-log" id="change-log">Change Log</a>
+</h1>
+<h1 id="rfc.section.7.1">
+<a href="#rfc.section.7.1">7.1.</a> <a href="#since-draft-kazuho-quic-authenticated-handshake-00" id="since-draft-kazuho-quic-authenticated-handshake-00">Since draft-kazuho-quic-authenticated-handshake-00</a>
+</h1>
+<p></p>
+
+<ul><li>None yet.</li></ul>
+<h1 id="rfc.references">
+<a href="#rfc.references">8.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="AES">[AES]</b></td>
+<td class="top">"<a>Advanced encryption standard (AES)</a>", National Institute of Standards and Technology report, DOI 10.6028/nist.fips.197, November 2001.</td>
+</tr>
+<tr>
+<td class="reference"><b id="QUIC-TLS">[QUIC-TLS]</b></td>
+<td class="top">
+<a title="Mozilla">Thomson, M.</a> and <a title="sn3rd">S. Turner</a>, "<a href="https://tools.ietf.org/html/draft-ietf-quic-tls-16">Using Transport Layer Security (TLS) to Secure QUIC</a>", Internet-Draft draft-ietf-quic-tls-16, October 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="QUIC-TRANSPORT">[QUIC-TRANSPORT]</b></td>
+<td class="top">
+<a title="Fastly">Iyengar, J.</a> and <a title="Mozilla">M. Thomson</a>, "<a href="https://tools.ietf.org/html/draft-ietf-quic-transport-16">QUIC: A UDP-Based Multiplexed and Secure Transport</a>", Internet-Draft draft-ietf-quic-transport-16, October 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2104">[RFC2104]</b></td>
+<td class="top">
+<a>Krawczyk, H.</a>, <a>Bellare, M.</a> and <a>R. Canetti</a>, "<a href="https://tools.ietf.org/html/rfc2104">HMAC: Keyed-Hashing for Message Authentication</a>", RFC 2104, DOI 10.17487/RFC2104, February 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8446">[RFC8446]</b></td>
+<td class="top">
+<a>Rescorla, E.</a>, "<a href="https://tools.ietf.org/html/rfc8446">The Transport Layer Security (TLS) Protocol Version 1.3</a>", RFC 8446, DOI 10.17487/RFC8446, August 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="TLS-ESNI">[TLS-ESNI]</b></td>
+<td class="top">
+<a title="RTFM, Inc.">Rescorla, E.</a>, <a title="Fastly">Oku, K.</a>, <a title="Cloudflare">Sullivan, N.</a> and <a title="Apple, Inc.">C. Wood</a>, "<a href="https://tools.ietf.org/html/draft-ietf-tls-esni-02">Encrypted Server Name Indication for TLS 1.3</a>", Internet-Draft draft-ietf-tls-esni-02, October 2018.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Kazuho Oku</span> 
+	  <span class="n hidden">
+		<span class="family-name">Oku</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Fastly</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:kazuhooku@gmail.com">kazuhooku@gmail.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Christian Huitema</span> 
+	  <span class="n hidden">
+		<span class="family-name">Huitema</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Private Octopus Inc.</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:huitema@huitema.net">huitema@huitema.net</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
