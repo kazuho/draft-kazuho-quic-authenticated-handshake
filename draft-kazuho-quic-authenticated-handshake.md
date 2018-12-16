@@ -173,6 +173,20 @@ tag of QUIC version 1.
 Other types of packets are protected using the Packet Protection method
 defined in QUIC version 1.
 
+### Destination Connection ID
+
+When establishing a connection, a client MUST initially set the Destination
+Connection ID to the hashed value of the first payload of the CRYPTO stream
+(i.e., the ClientHello message) truncated to first sixteen (16) bytes.  The
+hash function being used is the one selected by Encrypted SNI.
+
+When processing the first payload carried by a CRYPTO stream, a server MUST,
+in addition to verifying the authentication tag, verify that the truncated
+hash value of the payload is identical to the Destination Connection ID or to
+the original Connection ID recovered from the the Retry Token.  A server MUST
+NOT create or modify connection state if either or both the verification
+fails.
+
 ## Version Negotiation Packet
 
 A client MUST ignore Version Negotiation packets.  When the client gives up of
@@ -217,22 +231,20 @@ client MAY ignore Connection Close packets.
 
 ## Retry Packet
 
-A client SHOULD send an Initial packet in response to each Retry packet it
-receives.  Payload of the CRYPTO frame contained in the resent Initial packets
-MUST be identical to that of the Initial packet that triggered the retry.
+A client SHOULD send one Initial packet in response to each Retry packet it
+receives.  The Destination Connection ID of the Initial packet MUST be set to
+the value specified by the Retry packet, however the keys for encrypting and
+authenticating the packet MUST continue to be the original ones.  A server
+sending a Retry packet is expected to include the original Connection ID in
+the Retry Token it emits, and to use the value contained in the token attached
+to the Initial packet for unprotecting the payload.
+
+Payload of the CRYPTO frame contained in the resent Initial packets MUST be
+identical to that of the Initial packet that triggered the retry.
+
 When the client does not receive a valid Initial packet after a handshake
-timeout, it SHOULD send at least one Initial packet containing one of the
-tokens that it has received.  Unless the packet gets lost, the retransmission
-would trigger the server to send either a valid Initial packet or a Retry
-packet.
-
-To a server, the behavior of a client under attack would look like it is
-aggressively retransmitting Initial packets, some of them containing invalid
-tokens.
-
-Therefore, a server MUST NOT terminate the connection when it receives an
-Initial packet that contains an invalid token.  Instead, it SHOULD either
-process the packet as if it did not contain a token, or send a Retry.
+timeout, it SHOULD send an Initial packet with the Destination Connection ID
+and the token set to the original value.
 
 A client MUST ignore Retry packets received anterior to an Initial packet that
 successfully authenticates.
