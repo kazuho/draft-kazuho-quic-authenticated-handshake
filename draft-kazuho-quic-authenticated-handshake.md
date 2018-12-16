@@ -160,8 +160,8 @@ HMAC [RFC2104] is used for authenticating the header.  The message being
 authenticated is the concatenation of the packet header without Header
 Protection and the payload in cleartext.  The underlying hash function being
 used is the one selected for encrypting the Encrypted SNI extension.  The HMAC
-key is calculated using the following formula, where Zx is the DH shared
-secret being extracted:
+key is calculated using the following formula, where Zx is the extracted DH
+shared secret of Encrypted SNI:
 
 ~~~
    hmac_key = HKDF-Expand-Label(Zx, "quic initial auth", Hash(ESNIContents),
