@@ -152,9 +152,10 @@ extension of the ESNI Resource Record advertised by the server.
 ### Mapping to Connections
 
 A server associates an Initial packet to an existing connection using the
-Destination Connection ID and the five tuple.  If they both match to that of
-an existing connection, the packet is processed accordingly.  Otherwise, a
-server MUST handle the packet as potentially creating a new connection.
+Destination Connection ID, QUIC version, and the five tuple.  If all of the
+values match to that of an existing connection, the packet is processed
+accordingly.  Otherwise, a server MUST handle the packet as potentially
+creating a new connection.
 
 ### Protection
 
