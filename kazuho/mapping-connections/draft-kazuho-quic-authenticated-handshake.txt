@@ -79,10 +79,10 @@ Table of Contents
      3.3.  No Support for Split Mode . . . . . . . . . . . . . . . .   8
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
-   7.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     7.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .   8
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   9
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .   9
+     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -425,30 +425,11 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    TBD
 
-6.  Acknowledgements
-
-   TBD
-
-7.  Change Log
-
-7.1.  Since draft-kazuho-quic-authenticated-handshake-00
-
-   o  None yet.
-
-8.  Normative References
+6.  Normative References
 
    [AES]      "Advanced encryption standard (AES)", National Institute
               of Standards and Technology report,
               DOI 10.6028/nist.fips.197, November 2001.
-
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
    [QUIC-TLS]
               Thomson, M., Ed. and S. Turner, Ed., "Using Transport
@@ -459,6 +440,15 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
+
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -478,6 +468,16 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Rescorla, E., Oku, K., Sullivan, N., and C. Wood,
               "Encrypted Server Name Indication for TLS 1.3", draft-
               ietf-tls-esni-02 (work in progress), October 2018.
+
+Appendix A.  Acknowledgements
+
+   TBD
+
+Appendix B.  Change Log
+
+B.1.  Since draft-kazuho-quic-authenticated-handshake-00
+
+   o  None yet.
 
 Authors' Addresses
 
