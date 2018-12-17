@@ -97,7 +97,7 @@
     "milestone": null,
     "comments": 0,
     "created_at": "2018-12-16T22:18:29Z",
-    "updated_at": "2018-12-17T06:17:33Z",
+    "updated_at": "2018-12-17T22:25:48Z",
     "closed_at": null,
     "author_association": "OWNER",
     "pull_request": {
@@ -190,17 +190,17 @@
     "labels": [
 
     ],
-    "state": "open",
+    "state": "closed",
     "locked": false,
     "assignee": null,
     "assignees": [
 
     ],
     "milestone": null,
-    "comments": 0,
+    "comments": 1,
     "created_at": "2018-12-16T08:35:26Z",
-    "updated_at": "2018-12-16T08:35:26Z",
-    "closed_at": null,
+    "updated_at": "2018-12-17T22:27:08Z",
+    "closed_at": "2018-12-17T22:23:54Z",
     "author_association": "OWNER",
     "pull_request": {
       "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/8",
@@ -251,9 +251,9 @@
 
     ],
     "milestone": null,
-    "comments": 5,
+    "comments": 9,
     "created_at": "2018-12-16T05:01:48Z",
-    "updated_at": "2018-12-17T06:13:56Z",
+    "updated_at": "2018-12-17T22:18:37Z",
     "closed_at": null,
     "author_association": "NONE",
     "body": "Even if the messages are perfectly sealed and protected, the attacker can still play games by racing duplicates that use a different source address than the actual peer address. How do we protect against that?"
