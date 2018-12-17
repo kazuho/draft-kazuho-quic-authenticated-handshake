@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: June 19, 2019                              Private Octopus Inc.
-                                                       December 16, 2018
+Expires: June 20, 2019                              Private Octopus Inc.
+                                                       December 17, 2018
 
 
                     Authenticated Handshake for QUIC
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 19, 2019.
+   This Internet-Draft will expire on June 20, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 1]
+Oku & Huitema             Expires June 20, 2019                 [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 2]
+Oku & Huitema             Expires June 20, 2019                 [Page 2]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -157,15 +157,15 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 2.3.1.  Mapping to Connections
 
    A server associates an Initial packet to an existing connection using
-   the Destination Connection ID and the five tuple.  If they both match
-   to that of an existing connection, the packet is processed
-   accordingly.  Otherwise, a server MUST handle the packet as
-   potentially creating a new connection.
+   the Destination Connection ID, QUIC version, and the five tuple.  If
+   all of the values match to that of an existing connection, the packet
+   is processed accordingly.  Otherwise, a server MUST handle the packet
+   as potentially creating a new connection.
 
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 3]
+Oku & Huitema             Expires June 20, 2019                 [Page 3]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -221,7 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 4]
+Oku & Huitema             Expires June 20, 2019                 [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 5]
+Oku & Huitema             Expires June 20, 2019                 [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 6]
+Oku & Huitema             Expires June 20, 2019                 [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 7]
+Oku & Huitema             Expires June 20, 2019                 [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -445,7 +445,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 8]
+Oku & Huitema             Expires June 20, 2019                 [Page 8]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -501,4 +501,4 @@ Authors' Addresses
 
 
 
-Oku & Huitema             Expires June 19, 2019                 [Page 9]
+Oku & Huitema             Expires June 20, 2019                 [Page 9]
