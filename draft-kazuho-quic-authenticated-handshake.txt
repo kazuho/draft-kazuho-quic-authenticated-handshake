@@ -66,20 +66,21 @@ Table of Contents
      2.1.  Protocol Version Number . . . . . . . . . . . . . . . . .   3
      2.2.  The "QUIC-ESNI" TLS Extension . . . . . . . . . . . . . .   3
      2.3.  Initial Packet Protection . . . . . . . . . . . . . . . .   3
+       2.3.1.  Destination Connection ID . . . . . . . . . . . . . .   4
      2.4.  Version Negotiation Packet  . . . . . . . . . . . . . . .   4
      2.5.  Connection Close Packet . . . . . . . . . . . . . . . . .   4
      2.6.  Retry Packet  . . . . . . . . . . . . . . . . . . . . . .   5
-   3.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   5
-     3.1.  Using GCM to Authenticate Initial Packets . . . . . . . .   5
+   3.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   6
+     3.1.  Using GCM to Authenticate Initial Packets . . . . . . . .   6
      3.2.  Use of Different QUIC Version Number  . . . . . . . . . .   6
-       3.2.1.  Trial Decryption  . . . . . . . . . . . . . . . . . .   6
-       3.2.2.  Rekeying at the Server's First Flight . . . . . . . .   6
-     3.3.  No Support for Split Mode . . . . . . . . . . . . . . . .   7
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+       3.2.1.  Trial Decryption  . . . . . . . . . . . . . . . . . .   7
+       3.2.2.  Rekeying at the Server's First Flight . . . . . . . .   7
+     3.3.  No Support for Split Mode . . . . . . . . . . . . . . . .   8
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
    6.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   8
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .   8
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   9
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .   9
      B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
@@ -105,7 +106,6 @@ Table of Contents
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in [RFC2119].
-
 
 
 
@@ -179,6 +179,21 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    Other types of packets are protected using the Packet Protection
    method defined in QUIC version 1.
 
+2.3.1.  Destination Connection ID
+
+   When establishing a connection, a client MUST initially set the
+   Destination Connection ID to the hashed value of the first payload of
+   the CRYPTO stream (i.e., the ClientHello message) truncated to first
+   sixteen (16) bytes.  The hash function being used is the one selected
+   by Encrypted SNI.
+
+   When processing the first payload carried by a CRYPTO stream, a
+   server MUST, in addition to verifying the authentication tag, verify
+   that the truncated hash value of the payload is identical to the
+   Destination Connection ID or to the original Connection ID recovered
+   from the the Retry Token.  A server MUST NOT create or modify
+   connection state if either or both the verification fails.
+
 2.4.  Version Negotiation Packet
 
    A client MUST ignore Version Negotiation packets.  When the client
@@ -193,6 +208,23 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    identified by the lower 4-bits of the first octet.  The packet is a
    Connection Close packet if all the bits are set to zero.  Otherwise,
    the packet is a Retry packet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 4]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -218,14 +250,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    A client that receives a Connection Close packet before an Initial
    packet SHOULD retain the error code, and continue the connection
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 4]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    establishment attempt as if it did not see the packet.  When the
    attempt times out, it MAY assume that the error code was a legitimate
    value sent by the server.  A client MAY ignore Connection Close
@@ -233,24 +257,30 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 2.6.  Retry Packet
 
-   A client SHOULD send an Initial packet in response to each Retry
-   packet it receives.  Payload of the CRYPTO frame contained in the
-   resent Initial packets MUST be identical to that of the Initial
-   packet that triggered the retry.  When the client does not receive a
-   valid Initial packet after a handshake timeout, it SHOULD send at
-   least one Initial packet containing one of the tokens that it has
-   received.  Unless the packet gets lost, the retransmission would
-   trigger the server to send either a valid Initial packet or a Retry
-   packet.
+   A client SHOULD send one Initial packet in response to each Retry
+   packet it receives.  The Destination Connection ID of the Initial
+   packet MUST be set to the value specified by the Retry packet,
+   however the keys for encrypting and authenticating the packet MUST
+   continue to be the original ones.  A server sending a Retry packet is
+   expected to include the original Connection ID in the Retry Token it
+   emits, and to use the value contained in the token attached to the
+   Initial packet for unprotecting the payload.
 
-   To a server, the behavior of a client under attack would look like it
-   is aggressively retransmitting Initial packets, some of them
-   containing invalid tokens.
+   Payload of the CRYPTO frame contained in the resent Initial packets
+   MUST be identical to that of the Initial packet that triggered the
+   retry.
 
-   Therefore, a server MUST NOT terminate the connection when it
-   receives an Initial packet that contains an invalid token.  Instead,
-   it SHOULD either process the packet as if it did not contain a token,
-   or send a Retry.
+   When the client does not receive a valid Initial packet after a
+   handshake timeout, it SHOULD send an Initial packet with the
+   Destination Connection ID and the token set to the original value.
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 5]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
    A client MUST ignore Retry packets received anterior to an Initial
    packet that successfully authenticates.
@@ -274,14 +304,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    would be hard-coded to GCM, and that some AEAD APIs might not provide
    an interface to handle input in this particular way.
 
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 5]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    We can also consider adding a small checksum to the Initial packets
    so that the server can determine if the packet is corrupt.  The
    downside is that the endpoints would be required to calculate the
@@ -303,6 +325,18 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    The subsections below discuss alternative approaches that do not
    change the version number of QUIC.
+
+
+
+
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 6]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
 3.2.1.  Trial Decryption
 
@@ -330,14 +364,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    version 1 for client's first flight, while using the proposed method
    for all other Initial packets.
 
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 6]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    The benefit of this approach is that trial decryption can be avoided.
 
    The downside is that a man-on-the-side attacker can stitch the
@@ -356,6 +382,17 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    retransmitted Initial packets would become undecryptable and
    therefore be deemed lost by the client, reducing the client's
    congestion window size.
+
+
+
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 7]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
 3.3.  No Support for Split Mode
 
@@ -384,16 +421,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    TBD
 
-
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 7]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
 5.  IANA Considerations
 
    TBD
@@ -413,6 +440,15 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
+
+
+
+
+
+Oku & Huitema             Expires June 20, 2019                 [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -439,17 +475,6 @@ Appendix A.  Acknowledgements
 
 Appendix B.  Change Log
 
-
-
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
 B.1.  Since draft-kazuho-quic-authenticated-handshake-00
 
    o  None yet.
@@ -466,31 +491,6 @@ Authors' Addresses
    Private Octopus Inc.
 
    Email: huitema@huitema.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
