@@ -1,6 +1,114 @@
 [
 
   {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/11",
+    "id": 391525981,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MjM5MDA0Mjk3",
+    "number": 11,
+    "title": "rewrite split mode",
+    "user": {
+      "login": "kazuho",
+      "id": 41567,
+      "node_id": "MDQ6VXNlcjQxNTY3",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/41567?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kazuho",
+      "html_url": "https://github.com/kazuho",
+      "followers_url": "https://api.github.com/users/kazuho/followers",
+      "following_url": "https://api.github.com/users/kazuho/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kazuho/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kazuho/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kazuho/subscriptions",
+      "organizations_url": "https://api.github.com/users/kazuho/orgs",
+      "repos_url": "https://api.github.com/users/kazuho/repos",
+      "events_url": "https://api.github.com/users/kazuho/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kazuho/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2018-12-17T01:10:54Z",
+    "updated_at": "2018-12-17T01:10:54Z",
+    "closed_at": null,
+    "author_association": "OWNER",
+    "pull_request": {
+      "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/11",
+      "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/11",
+      "diff_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/11.diff",
+      "patch_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/11.patch"
+    },
+    "body": "Current text implies that support for Split Mode in QUIC-AH is substantially complicated compared to doing that in TLS-ESNI.\r\n\r\nBut actually, draft-tls-esni-02 already requires coordination between the fronting server and the hidden server. QUIC-AH is just adding some properties to the coordination.\r\n\r\nThe updated text clarifies that."
+  },
+  {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/10",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/10/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/10/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/10/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/10",
+    "id": 391511053,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MjM4OTk0MTg3",
+    "number": 10,
+    "title": "Initial packets are mapped to connections using (CID, 5-tuple)",
+    "user": {
+      "login": "kazuho",
+      "id": 41567,
+      "node_id": "MDQ6VXNlcjQxNTY3",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/41567?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kazuho",
+      "html_url": "https://github.com/kazuho",
+      "followers_url": "https://api.github.com/users/kazuho/followers",
+      "following_url": "https://api.github.com/users/kazuho/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kazuho/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kazuho/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kazuho/subscriptions",
+      "organizations_url": "https://api.github.com/users/kazuho/orgs",
+      "repos_url": "https://api.github.com/users/kazuho/repos",
+      "events_url": "https://api.github.com/users/kazuho/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kazuho/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2018-12-16T22:18:29Z",
+    "updated_at": "2018-12-17T06:17:33Z",
+    "closed_at": null,
+    "author_association": "OWNER",
+    "pull_request": {
+      "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/10",
+      "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/10",
+      "diff_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/10.diff",
+      "patch_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/10.patch"
+    },
+    "body": "fixes #7."
+  },
+  {
     "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/9",
     "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
     "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/9/labels{/name}",
@@ -41,9 +149,9 @@
 
     ],
     "milestone": null,
-    "comments": 0,
+    "comments": 1,
     "created_at": "2018-12-16T21:55:36Z",
-    "updated_at": "2018-12-16T21:55:36Z",
+    "updated_at": "2018-12-17T00:36:48Z",
     "closed_at": null,
     "author_association": "NONE",
     "body": "Hi @kazuho and @huitema, thanks for writing this! I was wondering, since this mechanism allows protecting the Initial payload, why not also to encrypt it?\r\n\r\nWe could write a separate KeyShareEntry (Named Group + Key Share) at the start of the payload and use that as the key to AES-GCM-128 to encrypt the payload. Header protection would use the traditional QUICv1 key and IV.\r\n\r\n```\r\n 0                   1                   2                   3\r\n 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1\r\n+-+-+-+-+-+-+-+-+\r\n|1|1|0 0|R R|P P|\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Version (32)                          |\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|DCIL(4)|SCIL(4)|\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|               Destination Connection ID (0/32..144)         ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                 Source Connection ID (0/32..144)            ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                           Length (i)                        ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                    Packet Number (8/16/24/32)               ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Named Group (16)                    ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Key Share (*)                       ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                          Payload (*)                        ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n```"
@@ -143,9 +251,9 @@
 
     ],
     "milestone": null,
-    "comments": 0,
+    "comments": 5,
     "created_at": "2018-12-16T05:01:48Z",
-    "updated_at": "2018-12-16T05:01:48Z",
+    "updated_at": "2018-12-17T06:13:56Z",
     "closed_at": null,
     "author_association": "NONE",
     "body": "Even if the messages are perfectly sealed and protected, the attacker can still play games by racing duplicates that use a different source address than the actual peer address. How do we protect against that?"
