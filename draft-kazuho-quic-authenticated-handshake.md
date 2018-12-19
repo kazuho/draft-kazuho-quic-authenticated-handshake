@@ -147,7 +147,17 @@ A client MUST NOT initiate a connection establishment attempt specified in
 this document unless it sees a compatible version number in the QUIC_ESNI
 extension of the ESNI Resource Record advertised by the server.
 
-## Initial Packet Protection
+## Initial Packet
+
+### Mapping to Connections
+
+A server associates an Initial packet to an existing connection using the
+Destination Connection ID, QUIC version, and the five tuple.  If all of the
+values match to that of an existing connection, the packet is processed
+accordingly.  Otherwise, a server MUST handle the packet as potentially
+creating a new connection.
+
+### Protection
 
 Initial packets are encrypted and authenticated differently from QUIC version
 1.
