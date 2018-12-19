@@ -65,10 +65,12 @@ Table of Contents
    2.  Differences from QUIC version 1 . . . . . . . . . . . . . . .   3
      2.1.  Protocol Version Number . . . . . . . . . . . . . . . . .   3
      2.2.  The "QUIC-ESNI" TLS Extension . . . . . . . . . . . . . .   3
-     2.3.  Initial Packet Protection . . . . . . . . . . . . . . . .   3
-       2.3.1.  Destination Connection ID . . . . . . . . . . . . . .   4
+     2.3.  Initial Packet  . . . . . . . . . . . . . . . . . . . . .   3
+       2.3.1.  Mapping to Connections  . . . . . . . . . . . . . . .   3
+       2.3.2.  Protection  . . . . . . . . . . . . . . . . . . . . .   4
+       2.3.3.  Destination Connection ID . . . . . . . . . . . . . .   4
      2.4.  Version Negotiation Packet  . . . . . . . . . . . . . . .   4
-     2.5.  Connection Close Packet . . . . . . . . . . . . . . . . .   4
+     2.5.  Connection Close Packet . . . . . . . . . . . . . . . . .   5
      2.6.  Retry Packet  . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Using GCM to Authenticate Initial Packets . . . . . . . .   6
@@ -102,8 +104,6 @@ Table of Contents
    This document defines a Packet Protection method for Initial packets
    that incorporates the ESNI shared secret, so that spoofed Initial
    packets will be detected and droped.
-
-
 
 
 
@@ -152,7 +152,25 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    in the QUIC_ESNI extension of the ESNI Resource Record advertised by
    the server.
 
-2.3.  Initial Packet Protection
+2.3.  Initial Packet
+
+2.3.1.  Mapping to Connections
+
+   A server associates an Initial packet to an existing connection using
+   the Destination Connection ID, QUIC version, and the five tuple.  If
+   all of the values match to that of an existing connection, the packet
+   is processed accordingly.  Otherwise, a server MUST handle the packet
+   as potentially creating a new connection.
+
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 3]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
+2.3.2.  Protection
 
    Initial packets are encrypted and authenticated differently from QUIC
    version 1.
@@ -162,14 +180,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    HMAC [RFC2104] is used for authenticating the header.  The message
    being authenticated is the concatenation of the packet header without
-
-
-
-Oku & Huitema             Expires June 22, 2019                 [Page 3]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    Header Protection and the payload in cleartext.  The underlying hash
    function being used is the one selected for encrypting the Encrypted
    SNI extension.  The HMAC key is calculated using the following
@@ -184,7 +194,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    Other types of packets are protected using the Packet Protection
    method defined in QUIC version 1.
 
-2.3.1.  Destination Connection ID
+2.3.3.  Destination Connection ID
 
    When establishing a connection, a client MUST initially set the
    Destination Connection ID to the hashed value of the first payload of
@@ -206,16 +216,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    differently based on the receipt of (or lack of) Version Negotiation
    packets.
 
-2.5.  Connection Close Packet
-
-   A Connection Close packet shares a long packet header with a type
-   value of 0x3 with the Retry packet.  The two types of packets are
-   identified by the lower 4-bits of the first octet.  The packet is a
-   Connection Close packet if all the bits are set to zero.  Otherwise,
-   the packet is a Retry packet.
-
-
-
 
 
 
@@ -225,6 +225,14 @@ Oku & Huitema             Expires June 22, 2019                 [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
+
+2.5.  Connection Close Packet
+
+   A Connection Close packet shares a long packet header with a type
+   value of 0x3 with the Retry packet.  The two types of packets are
+   identified by the lower 4-bits of the first octet.  The packet is a
+   Connection Close packet if all the bits are set to zero.  Otherwise,
+   the packet is a Retry packet.
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -266,14 +274,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    emits, and to use the value contained in the token attached to the
    Initial packet for unprotecting the payload.
 
-   Payload of the CRYPTO frame contained in the resent Initial packets
-   MUST be identical to that of the Initial packet that triggered the
-   retry.
-
-   When the client does not receive a valid Initial packet after a
-   handshake timeout, it SHOULD send an Initial packet with the
-   Destination Connection ID and the token set to the original value.
-
 
 
 
@@ -281,6 +281,14 @@ Oku & Huitema             Expires June 22, 2019                 [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
+
+   Payload of the CRYPTO frame contained in the resent Initial packets
+   MUST be identical to that of the Initial packet that triggered the
+   retry.
+
+   When the client does not receive a valid Initial packet after a
+   handshake timeout, it SHOULD send an Initial packet with the
+   Destination Connection ID and the token set to the original value.
 
    A client MUST ignore Retry packets received anterior to an Initial
    packet that successfully authenticates.
@@ -323,20 +331,15 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    packet rather than by decrypting the Initial packet to see if the
    Encrypted SNI extension is in use.
 
-   The subsections below discuss alternative approaches that do not
-   change the version number of QUIC.
-
-
-
-
-
-
 
 
 Oku & Huitema             Expires June 22, 2019                 [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
+
+   The subsections below discuss alternative approaches that do not
+   change the version number of QUIC.
 
 3.2.1.  Trial Decryption
 
@@ -382,9 +385,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    retransmitted Initial packets would become undecryptable and
    therefore be deemed lost by the client, reducing the client's
    congestion window size.
-
-
-
 
 
 

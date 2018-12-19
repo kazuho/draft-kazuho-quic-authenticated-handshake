@@ -286,8 +286,10 @@ ul.toc li {
 <link href="#rfc.section.2" rel="Chapter" title="2 Differences from QUIC version 1">
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Protocol Version Number">
 <link href="#rfc.section.2.2" rel="Chapter" title="2.2 The &#8220;QUIC-ESNI&#8221; TLS Extension">
-<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Initial Packet Protection">
-<link href="#rfc.section.2.3.1" rel="Chapter" title="2.3.1 Destination Connection ID">
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Initial Packet">
+<link href="#rfc.section.2.3.1" rel="Chapter" title="2.3.1 Mapping to Connections">
+<link href="#rfc.section.2.3.2" rel="Chapter" title="2.3.2 Protection">
+<link href="#rfc.section.2.3.3" rel="Chapter" title="2.3.3 Destination Connection ID">
 <link href="#rfc.section.2.4" rel="Chapter" title="2.4 Version Negotiation Packet">
 <link href="#rfc.section.2.5" rel="Chapter" title="2.5 Connection Close Packet">
 <link href="#rfc.section.2.6" rel="Chapter" title="2.6 Retry Packet">
@@ -378,9 +380,13 @@ ul.toc li {
 </li>
 <li>2.2.   <a href="#rfc.section.2.2">The &#8220;QUIC-ESNI&#8221; TLS Extension</a>
 </li>
-<li>2.3.   <a href="#rfc.section.2.3">Initial Packet Protection</a>
+<li>2.3.   <a href="#rfc.section.2.3">Initial Packet</a>
 </li>
-<ul><li>2.3.1.   <a href="#rfc.section.2.3.1">Destination Connection ID</a>
+<ul><li>2.3.1.   <a href="#rfc.section.2.3.1">Mapping to Connections</a>
+</li>
+<li>2.3.2.   <a href="#rfc.section.2.3.2">Protection</a>
+</li>
+<li>2.3.3.   <a href="#rfc.section.2.3.3">Destination Connection ID</a>
 </li>
 </ul><li>2.4.   <a href="#rfc.section.2.4">Version Negotiation Packet</a>
 </li>
@@ -453,22 +459,29 @@ ul.toc li {
 <p id="rfc.section.2.2.p.2">A server willing to accept QUIC connections using this specification MUST publish ESNI Resource Records that contain the QUIC_ESNI extension including the QUIC version number 0xXXXXXXXX.</p>
 <p id="rfc.section.2.2.p.3">A client MUST NOT initiate a connection establishment attempt specified in this document unless it sees a compatible version number in the QUIC_ESNI extension of the ESNI Resource Record advertised by the server.</p>
 <h1 id="rfc.section.2.3">
-<a href="#rfc.section.2.3">2.3.</a> <a href="#initial-packet-protection" id="initial-packet-protection">Initial Packet Protection</a>
+<a href="#rfc.section.2.3">2.3.</a> <a href="#initial-packet" id="initial-packet">Initial Packet</a>
 </h1>
-<p id="rfc.section.2.3.p.1">Initial packets are encrypted and authenticated differently from QUIC version 1.</p>
-<p id="rfc.section.2.3.p.2">AES <a href="#AES" class="xref">[AES]</a> in counter (CTR) mode is used for encrypting the payload.  The key and iv being used are identical to that of QUIC version 1.</p>
-<p id="rfc.section.2.3.p.3">HMAC <a href="#RFC2104" class="xref">[RFC2104]</a> is used for authenticating the header.  The message being authenticated is the concatenation of the packet header without Header Protection and the payload in cleartext.  The underlying hash function being used is the one selected for encrypting the Encrypted SNI extension.  The HMAC key is calculated using the following formula, where Zx is the extracted DH shared secret of Encrypted SNI:</p>
+<h1 id="rfc.section.2.3.1">
+<a href="#rfc.section.2.3.1">2.3.1.</a> <a href="#mapping-to-connections" id="mapping-to-connections">Mapping to Connections</a>
+</h1>
+<p id="rfc.section.2.3.1.p.1">A server associates an Initial packet to an existing connection using the Destination Connection ID, QUIC version, and the five tuple.  If all of the values match to that of an existing connection, the packet is processed accordingly.  Otherwise, a server MUST handle the packet as potentially creating a new connection.</p>
+<h1 id="rfc.section.2.3.2">
+<a href="#rfc.section.2.3.2">2.3.2.</a> <a href="#protection" id="protection">Protection</a>
+</h1>
+<p id="rfc.section.2.3.2.p.1">Initial packets are encrypted and authenticated differently from QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.2">AES <a href="#AES" class="xref">[AES]</a> in counter (CTR) mode is used for encrypting the payload.  The key and iv being used are identical to that of QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.3">HMAC <a href="#RFC2104" class="xref">[RFC2104]</a> is used for authenticating the header.  The message being authenticated is the concatenation of the packet header without Header Protection and the payload in cleartext.  The underlying hash function being used is the one selected for encrypting the Encrypted SNI extension.  The HMAC key is calculated using the following formula, where Zx is the extracted DH shared secret of Encrypted SNI:</p>
 <pre>
    hmac_key = HKDF-Expand-Label(Zx, "quic initial auth", Hash(ESNIContents),
                                 digest_size)
 </pre>
-<p id="rfc.section.2.3.p.4">The first sixteen (16) octets of the HMAC output replaces the authentication tag of QUIC version 1.</p>
-<p id="rfc.section.2.3.p.5">Other types of packets are protected using the Packet Protection method defined in QUIC version 1.</p>
-<h1 id="rfc.section.2.3.1">
-<a href="#rfc.section.2.3.1">2.3.1.</a> <a href="#destination-connection-id" id="destination-connection-id">Destination Connection ID</a>
+<p id="rfc.section.2.3.2.p.4">The first sixteen (16) octets of the HMAC output replaces the authentication tag of QUIC version 1.</p>
+<p id="rfc.section.2.3.2.p.5">Other types of packets are protected using the Packet Protection method defined in QUIC version 1.</p>
+<h1 id="rfc.section.2.3.3">
+<a href="#rfc.section.2.3.3">2.3.3.</a> <a href="#destination-connection-id" id="destination-connection-id">Destination Connection ID</a>
 </h1>
-<p id="rfc.section.2.3.1.p.1">When establishing a connection, a client MUST initially set the Destination Connection ID to the hashed value of the first payload of the CRYPTO stream (i.e., the ClientHello message) truncated to first sixteen (16) bytes.  The hash function being used is the one selected by Encrypted SNI.</p>
-<p id="rfc.section.2.3.1.p.2">When processing the first payload carried by a CRYPTO stream, a server MUST, in addition to verifying the authentication tag, verify that the truncated hash value of the payload is identical to the Destination Connection ID or to the original Connection ID recovered from the the Retry Token.  A server MUST NOT create or modify connection state if either or both the verification fails.</p>
+<p id="rfc.section.2.3.3.p.1">When establishing a connection, a client MUST initially set the Destination Connection ID to the hashed value of the first payload of the CRYPTO stream (i.e., the ClientHello message) truncated to first sixteen (16) bytes.  The hash function being used is the one selected by Encrypted SNI.</p>
+<p id="rfc.section.2.3.3.p.2">When processing the first payload carried by a CRYPTO stream, a server MUST, in addition to verifying the authentication tag, verify that the truncated hash value of the payload is identical to the Destination Connection ID or to the original Connection ID recovered from the the Retry Token.  A server MUST NOT create or modify connection state if either or both the verification fails.</p>
 <h1 id="rfc.section.2.4">
 <a href="#rfc.section.2.4">2.4.</a> <a href="#version-negotiation-packet" id="version-negotiation-packet">Version Negotiation Packet</a>
 </h1>
