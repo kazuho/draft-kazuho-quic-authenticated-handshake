@@ -1,6 +1,60 @@
 [
 
   {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/12",
+    "id": 391926689,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MjM5MzEyNzI0",
+    "number": 12,
+    "title": "Describe two attacks in security section.",
+    "user": {
+      "login": "huitema",
+      "id": 7464128,
+      "node_id": "MDQ6VXNlcjc0NjQxMjg=",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7464128?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/huitema",
+      "html_url": "https://github.com/huitema",
+      "followers_url": "https://api.github.com/users/huitema/followers",
+      "following_url": "https://api.github.com/users/huitema/following{/other_user}",
+      "gists_url": "https://api.github.com/users/huitema/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/huitema/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/huitema/subscriptions",
+      "organizations_url": "https://api.github.com/users/huitema/orgs",
+      "repos_url": "https://api.github.com/users/huitema/repos",
+      "events_url": "https://api.github.com/users/huitema/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/huitema/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2018-12-17T23:03:04Z",
+    "updated_at": "2018-12-19T04:59:40Z",
+    "closed_at": "2018-12-19T04:59:04Z",
+    "author_association": "COLLABORATOR",
+    "pull_request": {
+      "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/12",
+      "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/12",
+      "diff_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/12.diff",
+      "patch_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/12.patch"
+    },
+    "body": "I wrote text describing the two residual attacks once HMAC protection is established. The first one is\r\nthe CID attack that EKR discussed, and the second one is the address substitution attack that we discussed in issue #7 "
+  },
+  {
     "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11",
     "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
     "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/11/labels{/name}",
@@ -43,7 +97,7 @@
     "milestone": null,
     "comments": 0,
     "created_at": "2018-12-17T01:10:54Z",
-    "updated_at": "2018-12-17T01:10:54Z",
+    "updated_at": "2018-12-17T23:09:14Z",
     "closed_at": null,
     "author_association": "OWNER",
     "pull_request": {
@@ -88,7 +142,7 @@
     "labels": [
 
     ],
-    "state": "open",
+    "state": "closed",
     "locked": false,
     "assignee": null,
     "assignees": [
@@ -97,8 +151,8 @@
     "milestone": null,
     "comments": 0,
     "created_at": "2018-12-16T22:18:29Z",
-    "updated_at": "2018-12-17T22:25:48Z",
-    "closed_at": null,
+    "updated_at": "2018-12-19T05:00:11Z",
+    "closed_at": "2018-12-19T05:00:11Z",
     "author_association": "OWNER",
     "pull_request": {
       "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/10",
@@ -149,9 +203,9 @@
 
     ],
     "milestone": null,
-    "comments": 1,
+    "comments": 2,
     "created_at": "2018-12-16T21:55:36Z",
-    "updated_at": "2018-12-17T00:36:48Z",
+    "updated_at": "2018-12-17T22:57:52Z",
     "closed_at": null,
     "author_association": "NONE",
     "body": "Hi @kazuho and @huitema, thanks for writing this! I was wondering, since this mechanism allows protecting the Initial payload, why not also to encrypt it?\r\n\r\nWe could write a separate KeyShareEntry (Named Group + Key Share) at the start of the payload and use that as the key to AES-GCM-128 to encrypt the payload. Header protection would use the traditional QUICv1 key and IV.\r\n\r\n```\r\n 0                   1                   2                   3\r\n 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1\r\n+-+-+-+-+-+-+-+-+\r\n|1|1|0 0|R R|P P|\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Version (32)                          |\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|DCIL(4)|SCIL(4)|\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|               Destination Connection ID (0/32..144)         ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                 Source Connection ID (0/32..144)            ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                           Length (i)                        ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                    Packet Number (8/16/24/32)               ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Named Group (16)                    ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                         Key Share (*)                       ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n|                          Payload (*)                        ...\r\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\r\n```"
@@ -244,7 +298,7 @@
     "labels": [
 
     ],
-    "state": "open",
+    "state": "closed",
     "locked": false,
     "assignee": null,
     "assignees": [
@@ -253,9 +307,9 @@
     "milestone": null,
     "comments": 9,
     "created_at": "2018-12-16T05:01:48Z",
-    "updated_at": "2018-12-17T22:18:37Z",
-    "closed_at": null,
-    "author_association": "NONE",
+    "updated_at": "2018-12-19T05:00:11Z",
+    "closed_at": "2018-12-19T05:00:11Z",
+    "author_association": "COLLABORATOR",
     "body": "Even if the messages are perfectly sealed and protected, the attacker can still play games by racing duplicates that use a different source address than the actual peer address. How do we protect against that?"
   },
   {
@@ -303,7 +357,7 @@
     "created_at": "2018-12-16T04:59:48Z",
     "updated_at": "2018-12-16T04:59:48Z",
     "closed_at": null,
-    "author_association": "NONE",
+    "author_association": "COLLABORATOR",
     "body": "We may want to reuse EKR's email about threat model, and then explain how the design solves the various threats:\r\n\r\n_THREAT MODEL\r\nThis leads us directly to the question of the threat model. I assume\r\nthat we have what I termed a Class (3) attacker, which can inject\r\npackets and will always win the race but cannot delete packets.\r\nWith that, you get the following pattern:_\r\n```\r\nClient                  Attacker                Server\r\n\r\nCInitial ->\r\n                        CInitial' ->\r\n                        CInitial  ->\r\n                                           <- SInitial\r\n                        <- SInitial'\r\n                        <- SInitial\r\n\r\nCHandshake ->\r\n                        CHandshake ->\r\n```                    \r\n_Our objective is to have the handshake survive this treatment. In an\r\nideal world, we would cause the server and client to reject X' and\r\nprocess X but this isn't possible, with the design you suggest,\r\nbecause the attacker can always take CInitial, replace the CRYPTO\r\nframes with his own and then send it to the server, computing\r\na new MAC based on *his* Zx. Note that this won't necessarily have\r\nthe right ESNI but that doesn't matter, because it will have\r\nthe same [SC]CID, and so will cause cause CInitial to be discarded\r\nwhen it is received. As far as I can tell, your current design\r\ndoes not prevent this. If I'm missing something here, let me\r\nknow [0]_\r\n"
   },
   {
@@ -351,7 +405,7 @@
     "created_at": "2018-12-16T04:55:33Z",
     "updated_at": "2018-12-16T09:14:09Z",
     "closed_at": null,
-    "author_association": "NONE",
+    "author_association": "COLLABORATOR",
     "body": "The definition of the HMAC key derivation is unclear. We need to make it much simpler. Also, we want to incorporate the ICID."
   },
   {
@@ -388,18 +442,18 @@
     "labels": [
 
     ],
-    "state": "open",
+    "state": "closed",
     "locked": false,
     "assignee": null,
     "assignees": [
 
     ],
     "milestone": null,
-    "comments": 1,
+    "comments": 2,
     "created_at": "2018-12-16T04:54:04Z",
-    "updated_at": "2018-12-16T09:11:23Z",
-    "closed_at": null,
-    "author_association": "NONE",
+    "updated_at": "2018-12-17T22:28:41Z",
+    "closed_at": "2018-12-17T22:28:41Z",
+    "author_association": "COLLABORATOR",
     "body": "Based on discussion in mailing list. This will guarantee that there is exactly one Server Connection per ICID, which will simplify server defense a lot."
   },
   {
@@ -495,7 +549,7 @@
     "created_at": "2018-12-06T19:41:59Z",
     "updated_at": "2018-12-07T07:17:11Z",
     "closed_at": null,
-    "author_association": "NONE",
+    "author_association": "COLLABORATOR",
     "body": "The ESNI procedure involve the client, the fronting server and the hidden server. The client gets the ESNI public key, and uses it to encrypt the \"real SNI\". The fronting server decrypts the ESNI using the corresponding private key, obtains the \"real SNI\", and forwards the connection to the hidden server. There is no need for the hidden server to know the private ESNI key. If there was such a need, all services that share the fronting server would need to know the key, which would greatly increase the risks of leak.\r\n\r\nThe spec computes the AAD as:\r\n```\r\n   initial_auth_secret = HKDF-Expand-Label(Zx, \"quic initial auth\",\r\n                                           Hash(ESNIContents), 16)\r\n```\r\nThis requires access to the ESNI content. This is not a problem for the client because it chose that content, but it is not obvious for the hidden server, which does not have access to the ESNI private key. How is that supposed to work?\r\n"
   },
   {
@@ -543,7 +597,7 @@
     "created_at": "2018-12-06T17:18:11Z",
     "updated_at": "2018-12-08T08:16:49Z",
     "closed_at": null,
-    "author_association": "NONE",
+    "author_association": "COLLABORATOR",
     "body": "You propose to use the ESNI secret as input to the key generation for the \"Initial\" context. This is a significant departure from standard QUIC, and I am concerned that we have a circular dependency. Servers can only assess the ESNI content after receiving the Initial content, but receiving it requires decrypting the data. My implementation uses a standard call to the AEAD library for that. The ESNI content is not known at the time of the AEAD call, and the AEAD checksum is going to not verify.\r\n\r\nThere are several ways out of that, but I think the simplest way is to add some kind of ESNI proof in a the server response. I don't think it can be sent as a TLS extension, because in server's first flight the extension are encrypted. QUIC will send them as handshake packets, which means they cannot be used to protect the Initial packet. The simplest solution is probably to invent an \"ESNI proof\" frame, that should be conveyed in the Initial packet if the ESNI extension is accepted. "
   }
 
