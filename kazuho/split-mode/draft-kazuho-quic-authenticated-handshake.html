@@ -556,9 +556,11 @@ ul.toc li {
 <ul>
 <li>hmac_key</li>
 <li>spare Connection IDs</li>
+<li>ODCID</li>
 </ul>
 <p id="rfc.section.3.3.p.3">Both the fronting server and the hidden server need access to the hmac_key to authenticate the Initial packets.  However, because the key is derived from the shared DH secret of ESNI, it is not necessarily available to the hidden server.</p>
 <p id="rfc.section.3.3.p.4">Access to spare Connection IDs is mandatory to support clients migrating to different addresses.  The fronting server, without access to the 1-RTT QUIC frames being exchanged, cannot track the mapping of the Connection IDs that change mid-connection.</p>
+<p id="rfc.section.3.3.p.5">ODCID is necessary to decrypt an Initial packet sent in response to a Retry.  However, the value is typically available only to the server that generates the Retry.  The fronting server and the hidden server need to exchange the ODCID, or provide the secret for extracting the ODCID from a Retry token.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>

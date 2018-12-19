@@ -405,6 +405,8 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    o  spare Connection IDs
 
+   o  ODCID
+
    Both the fronting server and the hidden server need access to the
    hmac_key to authenticate the Initial packets.  However, because the
    key is derived from the shared DH secret of ESNI, it is not
@@ -414,6 +416,12 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    migrating to different addresses.  The fronting server, without
    access to the 1-RTT QUIC frames being exchanged, cannot track the
    mapping of the Connection IDs that change mid-connection.
+
+   ODCID is necessary to decrypt an Initial packet sent in response to a
+   Retry.  However, the value is typically available only to the server
+   that generates the Retry.  The fronting server and the hidden server
+   need to exchange the ODCID, or provide the secret for extracting the
+   ODCID from a Retry token.
 
 4.  Security Considerations
 
@@ -434,6 +442,14 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    The main defense against forgeries is the HMAC authentication of the
    Initial packets using an ESNI derived key that is not accessible to
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
    the attacker.  This prevents all classes of attacks using forged
    initial packets.  There are however two methods that are still
    available to the attackers:
@@ -442,13 +458,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    client request,
 
    2) Send duplicates of the client request from a fake source address.
-
-
-
-Oku & Huitema             Expires June 22, 2019                 [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
    These two attacks and their mitigation are discussed in the next
    sections.
@@ -490,6 +499,13 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    not prevent address substitution attacks such as: ``` Client Attacker
    Server
 
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
    CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ``` In
    this attack, the attacker races a copy of the Initial packet,
    substituting a faked value for the client's source address.  The goal
@@ -498,14 +514,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    The server cannot prevent this attack by just verifying the HMAC,
    because the address field is not covered by the checksum
-
-
-
-Oku & Huitema             Expires June 22, 2019                 [Page 9]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    authentication.  To actually mitigate the attack, the server needs to
    create different connection contexts for each pair of Initial DCID
    and source Address.  The resulting exchange will be: ``` Client
@@ -546,14 +554,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
 
-   [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
-              Hashing for Message Authentication", RFC 2104,
-              DOI 10.17487/RFC2104, February 1997,
-              <https://www.rfc-editor.org/info/rfc2104>.
-
-
-
-
 
 
 
@@ -561,6 +561,11 @@ Oku & Huitema             Expires June 22, 2019                [Page 10]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
+
+   [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
+              Hashing for Message Authentication", RFC 2104,
+              DOI 10.17487/RFC2104, February 1997,
+              <https://www.rfc-editor.org/info/rfc2104>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -598,11 +603,6 @@ Authors' Addresses
    Private Octopus Inc.
 
    Email: huitema@huitema.net
-
-
-
-
-
 
 
 
