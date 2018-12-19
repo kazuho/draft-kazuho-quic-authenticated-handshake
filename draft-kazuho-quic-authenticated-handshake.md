@@ -349,6 +349,7 @@ extension:
 
 * hmac_key
 * spare Connection IDs
+* ODCID
 
 Both the fronting server and the hidden server need access to the hmac_key to
 authenticate the Initial packets.  However, because the key is derived from
@@ -359,6 +360,11 @@ Access to spare Connection IDs is mandatory to support clients migrating to
 different addresses.  The fronting server, without access to the 1-RTT QUIC
 frames being exchanged, cannot track the mapping of the Connection IDs that
 change mid-connection.
+
+ODCID is necessary to decrypt an Initial packet sent in response to a Retry.
+However, the value is typically available only to the server that generates
+the Retry.  The fronting server and the hidden server need to exchange the
+ODCID, or provide the secret for extracting the ODCID from a Retry token.
 
 # Security Considerations
 
