@@ -353,7 +353,128 @@ tuple of the packets that the client has sent.
 
 # Security Considerations
 
-TBD
+The authenticated handshake is designed to enable successful connections
+even if clients and servers are attacked by a powerful "man on the side",
+which cannot delete packets but can inject packets and will always win the
+race against original packets. We want to enable the following pattern:
+```
+
+Client                  Attacker                Server
+
+CInitial ->
+                        CInitial' ->
+                        CInitial  ->
+                                           <- SInitial
+                        <- SInitial'
+                        <- SInitial
+
+CHandshake ->
+                        CHandshake ->
+```
+The goal is a successful handshake despite injection by the attacker
+of fake Client Initial packet (CInitial') or Server Initial packet (SInitial').
+
+The main defense against forgeries is the HMAC authentication of the Initial
+packets using an ESNI derived key that is not accessible to the attacker. This
+prevents all classes of attacks using forged initial packets. There are
+however two methods that are still available to the attackers:
+
+1) Forge an Initial packet that will claim the same context as the client request,
+
+2) Send duplicates of the client request from a fake source address.
+
+These two attacks and their mitigation are discussed in the next sections.
+
+## Resisting the duplicate context attack
+
+The attacker mounts a duplicate context attack by observing the original
+Client Initial packet, and then creating its own Client Initial
+packet in which source and destination CID are the same as in the
+original packet. The ESNI secret will be different, because the packet
+is composed by the server. The goal of the attacker is to let the
+server create a context associated with the CID, so that when the
+original Client Initial later arrives it gets discarded.
+
+This attack is mitigated by verifying that the Destination CID of the
+Client Initial matches the hash of the first CRYPTO stream payload.
+
+If the server uses address verification, there may be a Retry scenario:
+```
+Client                  Attacker                Server
+
+CInitial ->
+                                           <- Retry (with Token)
+CInitial2 (including Token) ->
+                                            <- Sinitial
+
+CHandshake ->
+```
+The Destination CID of the second Client Initial packet is selected
+by the server, or by a device acting on behalf of the server. This
+destination CID will not match the hash of the CRYPTO stream payload.
+However, in the retry scenario, the server is already rquired to know
+the Destination CID from the original Client Initial packet (ODCID),
+because it has to echo it in the transport parameters extension. The
+server can then verify that the hash of the CRYPTO stream payload
+matches the ODCID.
+
+## Resisting Address Substitution Attacks
+
+The DCID of the original Initial packet is defined as the hash of the first
+payload of the CRYPTO stream. This prevents attackers from sending "fake"
+initial packets that would be processed in the same server connection context
+as the authentic packet. However, it does not prevent address substitution
+attacks such as:
+```
+Client                  Attacker                Server
+
+CInitial(from A) ->
+                        CInitial(from A') ->
+                        CInitial(from A)  ->
+```
+In this attack, the attacker races a copy of the Initial packet, substituting
+a faked value for the client's source address. The goal of the attack is
+to cause the server to associate the fake address with the connection
+context, causing the connection to fail.
+
+The server cannot prevent this attack by just verifying the HMAC, because the
+address field is not covered by the checksum authentication. To actually mitigate
+the attack, the server needs to create different connection contexts for each
+pair of Initial DCID and source Address. The resulting exchange will be:
+```
+Client                  Attacker                Server
+
+CInitial(from A) ->
+                        CInitial(A') ->
+                                                     <- SInitial-X(to A')
+                        CInitial(A)  ->
+                                                     <- SInitial-Y(to A)
+CHandshake-Y ->
+```
+
+The server behavior is required even if the server uses address verification
+procedures, because the attacker could mount a complex attack in which
+it obtains a Retry Token for its own address, then forwards it to the
+client:
+```
+Client                  Attacker                Server
+
+CInitial(from A) ->
+                        CInitial(from A') ->
+                                                <- Retry(to A', T(A'))
+                        <- Retry(to A, T(A'))
+CInitial2(from A, T(A')) ->
+                        CInitial(from A', T(A')) ->                        
+
+
+                        CInitial(from A)  ->
+                                                <- Retry(T(A))
+CInitial3(from A, T(A)) ->
+```
+At the end of this exchange, the server will have received two valid client initial packets
+that both path address verification and the ESNI based HMAC, and both have the same CRYPTO
+stream initial payload and the same ODCID. If it kept only one of them, the attacker would
+have succeeded in distrupting the connection attempt.
 
 # IANA Considerations
 
