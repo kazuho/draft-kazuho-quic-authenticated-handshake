@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: June 20, 2019                              Private Octopus Inc.
-                                                       December 17, 2018
+Expires: June 22, 2019                              Private Octopus Inc.
+                                                       December 19, 2018
 
 
                     Authenticated Handshake for QUIC
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 20, 2019.
+   This Internet-Draft will expire on June 22, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema             Expires June 20, 2019                 [Page 1]
+Oku & Huitema             Expires June 22, 2019                 [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -61,7 +61,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   2
+     1.1.  Notational Conventions  . . . . . . . . . . . . . . . . .   3
    2.  Differences from QUIC version 1 . . . . . . . . . . . . . . .   3
      2.1.  Protocol Version Number . . . . . . . . . . . . . . . . .   3
      2.2.  The "QUIC-ESNI" TLS Extension . . . . . . . . . . . . . .   3
@@ -77,12 +77,14 @@ Table of Contents
        3.2.2.  Rekeying at the Server's First Flight . . . . . . . .   7
      3.3.  No Support for Split Mode . . . . . . . . . . . . . . . .   8
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   9
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .   9
-     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
+     4.1.  Resisting the duplicate context attack  . . . . . . . . .   9
+     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   9
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  11
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  11
+     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -101,18 +103,22 @@ Table of Contents
    that incorporates the ESNI shared secret, so that spoofed Initial
    packets will be detected and droped.
 
+
+
+
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 2]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
 1.1.  Notational Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in [RFC2119].
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 2]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
 2.  Differences from QUIC version 1
 
@@ -156,19 +162,18 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    HMAC [RFC2104] is used for authenticating the header.  The message
    being authenticated is the concatenation of the packet header without
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 3]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
    Header Protection and the payload in cleartext.  The underlying hash
    function being used is the one selected for encrypting the Encrypted
    SNI extension.  The HMAC key is calculated using the following
    formula, where Zx is the extracted DH shared secret of Encrypted SNI:
-
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 3]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
    hmac_key = HKDF-Expand-Label(Zx, "quic initial auth", Hash(ESNIContents),
                                 digest_size)
@@ -216,12 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 4]
+Oku & Huitema             Expires June 22, 2019                 [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 20, 2019                 [Page 5]
+Oku & Huitema             Expires June 22, 2019                 [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 20, 2019                 [Page 6]
+Oku & Huitema             Expires June 22, 2019                 [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 20, 2019                 [Page 7]
+Oku & Huitema             Expires June 22, 2019                 [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
@@ -419,7 +419,114 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 4.  Security Considerations
 
-   TBD
+   The authenticated handshake is designed to enable successful
+   connections even if clients and servers are attacked by a powerful
+   "man on the side", which cannot delete packets but can inject packets
+   and will always win the race against original packets.  We want to
+   enable the following pattern: ```
+
+   Client Attacker Server
+
+   CInitial -> CInitial' -> CInitial -> <- SInitial <- SInitial' <-
+   SInitial
+
+   CHandshake -> CHandshake -> ``` The goal is a successful handshake
+   despite injection by the attacker of fake Client Initial packet
+   (CInitial') or Server Initial packet (SInitial').
+
+   The main defense against forgeries is the HMAC authentication of the
+   Initial packets using an ESNI derived key that is not accessible to
+   the attacker.  This prevents all classes of attacks using forged
+   initial packets.  There are however two methods that are still
+   available to the attackers:
+
+   1) Forge an Initial packet that will claim the same context as the
+   client request,
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
+   2) Send duplicates of the client request from a fake source address.
+
+   These two attacks and their mitigation are discussed in the next
+   sections.
+
+4.1.  Resisting the duplicate context attack
+
+   The attacker mounts a duplicate context attack by observing the
+   original Client Initial packet, and then creating its own Client
+   Initial packet in which source and destination CID are the same as in
+   the original packet.  The ESNI secret will be different, because the
+   packet is composed by the server.  The goal of the attacker is to let
+   the server create a context associated with the CID, so that when the
+   original Client Initial later arrives it gets discarded.
+
+   This attack is mitigated by verifying that the Destination CID of the
+   Client Initial matches the hash of the first CRYPTO stream payload.
+
+   If the server uses address verification, there may be a Retry
+   scenario: ``` Client Attacker Server
+
+   CInitial -> <- Retry (with Token) CInitial2 (including Token) -> <-
+   Sinitial
+
+   CHandshake -> ``` The Destination CID of the second Client Initial
+   packet is selected by the server, or by a device acting on behalf of
+   the server.  This destination CID will not match the hash of the
+   CRYPTO stream payload.  However, in the retry scenario, the server is
+   already rquired to know the Destination CID from the original Client
+   Initial packet (ODCID), because it has to echo it in the transport
+   parameters extension.  The server can then verify that the hash of
+   the CRYPTO stream payload matches the ODCID.
+
+4.2.  Resisting Address Substitution Attacks
+
+   The DCID of the original Initial packet is defined as the hash of the
+   first payload of the CRYPTO stream.  This prevents attackers from
+   sending "fake" initial packets that would be processed in the same
+   server connection context as the authentic packet.  However, it does
+   not prevent address substitution attacks such as: ``` Client Attacker
+   Server
+
+   CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ``` In
+   this attack, the attacker races a copy of the Initial packet,
+   substituting a faked value for the client's source address.  The goal
+   of the attack is to cause the server to associate the fake address
+   with the connection context, causing the connection to fail.
+
+
+
+
+Oku & Huitema             Expires June 22, 2019                 [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
+
+   The server cannot prevent this attack by just verifying the HMAC,
+   because the address field is not covered by the checksum
+   authentication.  To actually mitigate the attack, the server needs to
+   create different connection contexts for each pair of Initial DCID
+   and source Address.  The resulting exchange will be: ``` Client
+   Attacker Server
+
+   CInitial(from A) -> CInitial(A') -> <- SInitial-X(to A') CInitial(A)
+   -> <- SInitial-Y(to A) CHandshake-Y -> ```
+
+   The server behavior is required even if the server uses address
+   verification procedures, because the attacker could mount a complex
+   attack in which it obtains a Retry Token for its own address, then
+   forwards it to the client: ``` Client Attacker Server
+
+   CInitial(from A) -> CInitial(from A') -> <- Retry(to A', T(A')) <-
+   Retry(to A, T(A')) CInitial2(from A, T(A')) -> CInitial(from A',
+   T(A')) ->
+
+                    CInitial(from A)  ->
+                                            <- Retry(T(A)) CInitial3(from A, T(A)) -> ``` At the end of this exchange, the server will have received two valid client initial packets that both path address verification and the ESNI based HMAC, and both have the same CRYPTO stream initial payload and the same ODCID. If it kept only one of them, the attacker would have succeeded in distrupting the connection attempt.
 
 5.  IANA Considerations
 
@@ -441,19 +548,19 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
 
-
-
-
-
-Oku & Huitema             Expires June 20, 2019                 [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
               <https://www.rfc-editor.org/info/rfc2104>.
+
+
+
+
+
+Oku & Huitema             Expires June 22, 2019                [Page 10]
+
+Internet-Draft      Authenticated Handshake for QUIC       December 2018
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -501,4 +608,9 @@ Authors' Addresses
 
 
 
-Oku & Huitema             Expires June 20, 2019                 [Page 9]
+
+
+
+
+
+Oku & Huitema             Expires June 22, 2019                [Page 11]
