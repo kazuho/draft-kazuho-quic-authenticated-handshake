@@ -1,6 +1,114 @@
 [
 
   {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/14",
+    "id": 461330021,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MjkyMjc5Njcw",
+    "number": 14,
+    "title": "Update ref to tls-esi-03, add \"robustness\" support",
+    "user": {
+      "login": "kazuho",
+      "id": 41567,
+      "node_id": "MDQ6VXNlcjQxNTY3",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/41567?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kazuho",
+      "html_url": "https://github.com/kazuho",
+      "followers_url": "https://api.github.com/users/kazuho/followers",
+      "following_url": "https://api.github.com/users/kazuho/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kazuho/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kazuho/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kazuho/subscriptions",
+      "organizations_url": "https://api.github.com/users/kazuho/orgs",
+      "repos_url": "https://api.github.com/users/kazuho/repos",
+      "events_url": "https://api.github.com/users/kazuho/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kazuho/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2019-06-27T05:59:15Z",
+    "updated_at": "2019-06-27T05:59:28Z",
+    "closed_at": null,
+    "author_association": "OWNER",
+    "pull_request": {
+      "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/14",
+      "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/14",
+      "diff_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/14.diff",
+      "patch_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/14.patch"
+    },
+    "body": "Now that https://github.com/tlswg/draft-ietf-tls-esni/pull/124 has been merged, QUIC-AH needs to provide a way to correct the ESNI Resource Record when the record possessed by the endpoints become out-of-sync.\r\n\r\nThis PR describes the fallback mechanism. In short, it works like follows:\r\n1. Client sends QUIC-AH Initial packet.\r\n2. A server failing to process the Initial sends VN specifying v1.\r\n3. Client sends V1 Initial containing CH with empty \"encrypted_server_name\" extension.\r\n4. Server either sends the ESNI record, or the lack of, in the way specified by ESNI.\r\n5. Client reattempts to create a connection.\r\n\r\nThe thing here is that we essentially need a non-authenticated ESNI handshake for obtaining the correct ESNI key (see step 3). At the moment, step 3 uses an empty \"encrypted_server_name\" extension because the purpose here is to purely obtain the correct ESNI record (or the lack of), but we can send an ordinary ESNI extension here too.\r\n\r\nThen, the question that become apparent is: should we define a mechanism to just run ESNI+version greasing (#13), and make \"authenticated handshake\" an optional feature?"
+  },
+  {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/13",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/13/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/13/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/13/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/13",
+    "id": 461307580,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MjkyMjYyMTkx",
+    "number": 13,
+    "title": "Version number greasing",
+    "user": {
+      "login": "kazuho",
+      "id": 41567,
+      "node_id": "MDQ6VXNlcjQxNTY3",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/41567?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kazuho",
+      "html_url": "https://github.com/kazuho",
+      "followers_url": "https://api.github.com/users/kazuho/followers",
+      "following_url": "https://api.github.com/users/kazuho/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kazuho/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kazuho/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kazuho/subscriptions",
+      "organizations_url": "https://api.github.com/users/kazuho/orgs",
+      "repos_url": "https://api.github.com/users/kazuho/repos",
+      "events_url": "https://api.github.com/users/kazuho/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kazuho/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2019-06-27T04:28:05Z",
+    "updated_at": "2019-06-27T11:58:08Z",
+    "closed_at": null,
+    "author_association": "OWNER",
+    "pull_request": {
+      "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/pulls/13",
+      "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/13",
+      "diff_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/13.diff",
+      "patch_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/pull/13.patch"
+    },
+    "body": "Replaces QUIC_ESNI extension with QUIC_AH extension, that maps base versions to a list of wire versions that have no semantic meaning.\r\n\r\nIn case of QUIC-AH (which is the authenticated handshake flavor of QUIC v1), a base version of `1` would have a list of wire versions."
+  },
+  {
     "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12",
     "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
     "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/12/labels{/name}",
@@ -97,7 +205,7 @@
     "milestone": null,
     "comments": 2,
     "created_at": "2018-12-17T01:10:54Z",
-    "updated_at": "2019-06-27T02:40:18Z",
+    "updated_at": "2019-06-27T06:07:25Z",
     "closed_at": null,
     "author_association": "OWNER",
     "pull_request": {
