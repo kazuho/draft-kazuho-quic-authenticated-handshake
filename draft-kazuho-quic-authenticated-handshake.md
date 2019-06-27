@@ -62,8 +62,8 @@ normative:
   TLS-ESNI:
     title: Encrypted Server Name Indication for TLS 1.3
     seriesinfo:
-      Internet-Draft: draft-ietf-tls-esni-02
-    date: 2018-10-22
+      Internet-Draft: draft-ietf-tls-esni-03
+    date: 2019-03-11
     author:
       -
         ins: E. Rescorla
@@ -200,9 +200,31 @@ fails.
 
 ## Version Negotiation Packet
 
-A client MUST ignore Version Negotiation packets.  When the client gives up of
-establishing a connection, it MAY report the failure differently based on the
-receipt of (or lack of) Version Negotiation packets.
+A server sends a Version Negotiation packet when receiving a long header packet
+carrying a version number that it does not recognize.  This can happen when the
+ESNI Resource Records used by the endpoints become out of sync, or when the
+server stops using the authenticated handshake.
+
+Because such case is exceptional, a client SHOULD NOT respond immediately to a
+Version Negotiation packet.  Instead, it SHOULD buffer the Version Negotiation
+packet that it has received, continue the handshake as if it has not received
+it.
+
+After the client is confident that the server is not responding using the QUIC
+version that the client has offered, it SHOULD process the Version Negotiation
+packet and fall back to the most preferred version specified by the Version
+Negotiation packet.
+
+The TLS handshake message transmitted using the fallback version MUST contain
+a "server_name" extension carrying the public name specified by the ESNI
+Resource Record, along with an empty "encrypted_server_name" extension.  This
+allows the server to provide, through an authenicated channel, either the
+correct ESNI Resource Record or the lack of support for Encrypted SNI and
+authenticated handshake (see {{TLS-ESNI}}; section 5.1.2).
+
+The client then reattempts to establish a connection, either by using the newly
+provided ESNI Resource Record (if any), or by using the fallback version without
+using the "encrypted_server_name" extension.
 
 ## Connection Close Packet
 
