@@ -201,9 +201,12 @@ fails.
 ## Version Negotiation Packet
 
 A server sends a Version Negotiation packet when receiving a long header packet
-carrying a version number that it does not recognize.  This can happen when the
-ESNI Resource Records used by the endpoints become out of sync, or when the
-server stops using the authenticated handshake.
+carrying a version number that it does not recognize.  In addition, a server
+SHOULD send a Version Negotiation packet when it recognizes the version as being
+one used by the authenticated handshake, but when it fails to authenticate the
+Initial packets.  These happen when the ESNI Resource Records used by the
+endpoints become out of sync, or when the server stops using the authenticated
+handshake.
 
 Because such case is exceptional, a client SHOULD NOT respond immediately to a
 Version Negotiation packet.  Instead, it SHOULD buffer the Version Negotiation
