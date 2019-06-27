@@ -300,30 +300,6 @@ endpoints would be required to calculate the checksum for Initial packets that
 carry server's messages and ACKs as well, even though the correctness of the
 packet can be verified using the ordinary procedure of AEAD.
 
-### Rekeying at the Server's First Flight
-
-Another approach is to use the Packet Protection method of QUIC version 1 for
-client's first flight, while using the proposed method for all other Initial
-packets.
-
-The benefit of this approach is that trial decryption can be avoided.
-
-The downside is that a man-on-the-side attacker can stitch the Encrypted SNI
-extension that the client has sent with anything it wants to construct a
-spoofed packet, then race it to the server.
-
-The server would be required to consider Initial packets containing
-non-identical ClientHello messages as belonging to different connection
-establishment attempts.
-
-The design will also have negative performance impact on connections with high
-latency.  This is because QUIC expects clients to retransmit the Initial
-packets when the latency is above 250 milliseconds.  However, the requirement
-that the server rekeys the Initial secret when receiving the first Initial
-packet means that the retransmitted Initial packets would become undecryptable
-and therefore be deemed lost by the client, reducing the client's congestion
-window size.
-
 ## No Support for Split Mode
 
 Under the design discussed in this document, it is impossible to use an
