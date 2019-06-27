@@ -213,10 +213,10 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
    A server sends a Version Negotiation packet when receiving a long
    header packet carrying a version number that it does not recognize.
-   This can happen when the ESNI Resource Records used by the endpoints
-   become out of sync, or when the server stops using the authenticated
-   handshake.
-
+   In addition, a server SHOULD send a Version Negotiation packet when
+   it recognizes the version as being one used by the authenticated
+   handshake, but when it fails to authenticate the Initial packets.
+   These happen when the ESNI Resource Records used by the endpoints
 
 
 
@@ -225,6 +225,9 @@ Oku & Huitema           Expires December 29, 2019               [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
+
+   become out of sync, or when the server stops using the authenticated
+   handshake.
 
    Because such case is exceptional, a client SHOULD NOT respond
    immediately to a Version Negotiation packet.  Instead, it SHOULD
@@ -272,15 +275,14 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    |           Error Code (16)     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   (: #connection-close-format title="Connection Close Packet")
-
-
 
 
 Oku & Huitema           Expires December 29, 2019               [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
+
+   (: #connection-close-format title="Connection Close Packet")
 
    A Connection Close packet is sent by a server when a connection error
    occurs prior to deriving the HMAC key.  In all other conditions,
@@ -328,8 +330,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    first decrypt the payload using AES-CTR, derive ESNI shared secret
    from the Hello message being contained, then use that to verify the
    GCM tag.
-
-
 
 
 
