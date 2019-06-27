@@ -80,13 +80,13 @@ Table of Contents
      3.3.  Split Mode  . . . . . . . . . . . . . . . . . . . . . . .   8
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
      4.1.  Resisting the duplicate context attack  . . . . . . . . .   9
-     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .  10
+     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   9
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  11
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  11
    Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  11
      B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -398,8 +398,8 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
    To support server-side deployments using "Split Mode" ([TLS-ESNI];
    section 3), the following properties need to be exchanged between the
-   fronting server and the hidden server, in addition to those required
-   by the Encrypted SNI extension:
+   fronting server and the hidden server, in addition to those generally
+   required by a QUIC version 1 proxy and the Encrypted SNI extension:
 
    o  hmac_key
 
@@ -416,24 +416,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    need to exchange the ODCID, or provide the secret for extracting the
    ODCID from a Retry token.
 
-   Additionally, the following properties need to be exchanged when
-   providing support for connection migration:
-
-   o  client's address tuple
-
-   o  spare Connection IDs
-
-   The fronting server needs to forward the source IP address and port
-   of the incoming packets to the hidden server, so that the hidden
-   server can recognize the migration of the client and respond as
-   required by QUIC version 1.
-
-   The fronting server and the hidden server also need to share the
-   spare Connection IDs being issued to the client using
-   NEW_CONNECTION_ID frames, so that the fronting server can continue
-   forwarding packets to the correct hidden server when the client
-   starts using a new connection ID mid-connection.
-
 4.  Security Considerations
 
    The authenticated handshake is designed to enable successful
@@ -441,14 +423,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    "man on the side", which cannot delete packets but can inject packets
    and will always win the race against original packets.  We want to
    enable the following pattern: ```
-
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
 
    Client Attacker Server
 
@@ -467,6 +441,14 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
    1) Forge an Initial packet that will claim the same context as the
    client request,
+
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    2) Send duplicates of the client request from a fake source address.
 
@@ -498,14 +480,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    CRYPTO stream payload.  However, in the retry scenario, the server is
    already rquired to know the Destination CID from the original Client
    Initial packet (ODCID), because it has to echo it in the transport
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 9]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    parameters extension.  The server can then verify that the hash of
    the CRYPTO stream payload matches the ODCID.
 
@@ -523,6 +497,14 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    substituting a faked value for the client's source address.  The goal
    of the attack is to cause the server to associate the fake address
    with the connection context, causing the connection to fail.
+
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    The server cannot prevent this attack by just verifying the HMAC,
    because the address field is not covered by the checksum
@@ -550,18 +532,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
    TBD
 
-
-
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019              [Page 10]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
 6.  Normative References
 
    [AES]      "Advanced encryption standard (AES)", National Institute
@@ -582,6 +552,15 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
               Hashing for Message Authentication", RFC 2104,
               DOI 10.17487/RFC2104, February 1997,
               <https://www.rfc-editor.org/info/rfc2104>.
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019              [Page 10]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -606,17 +585,6 @@ Appendix B.  Change Log
 B.1.  Since draft-kazuho-quic-authenticated-handshake-00
 
    o  None yet.
-
-
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019              [Page 11]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
 
 Authors' Addresses
 
@@ -645,28 +613,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019              [Page 12]
+Oku & Huitema           Expires December 29, 2019              [Page 11]
