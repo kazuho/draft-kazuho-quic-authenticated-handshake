@@ -74,17 +74,16 @@ Table of Contents
      2.6.  Retry Packet  . . . . . . . . . . . . . . . . . . . . . .   6
    3.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Using GCM to Authenticate Initial Packets . . . . . . . .   6
-       3.1.1.  Rekeying at the Server's First Flight . . . . . . . .   7
      3.2.  No Support for Split Mode . . . . . . . . . . . . . . . .   7
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
      4.1.  Resisting the duplicate context attack  . . . . . . . . .   8
-     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   9
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  11
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  11
-     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   8
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  10
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  10
+     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
@@ -102,6 +101,7 @@ Table of Contents
    This document defines a Packet Protection method for Initial packets
    that incorporates the ESNI shared secret, so that spoofed Initial
    packets will be detected and droped.
+
 
 
 
@@ -345,31 +345,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    well, even though the correctness of the packet can be verified using
    the ordinary procedure of AEAD.
 
-3.1.1.  Rekeying at the Server's First Flight
-
-   Another approach is to use the Packet Protection method of QUIC
-   version 1 for client's first flight, while using the proposed method
-   for all other Initial packets.
-
-   The benefit of this approach is that trial decryption can be avoided.
-
-   The downside is that a man-on-the-side attacker can stitch the
-   Encrypted SNI extension that the client has sent with anything it
-   wants to construct a spoofed packet, then race it to the server.
-
-   The server would be required to consider Initial packets containing
-   non-identical ClientHello messages as belonging to different
-   connection establishment attempts.
-
-   The design will also have negative performance impact on connections
-   with high latency.  This is because QUIC expects clients to
-   retransmit the Initial packets when the latency is above 250
-   milliseconds.  However, the requirement that the server rekeys the
-   Initial secret when receiving the first Initial packet means that the
-   retransmitted Initial packets would become undecryptable and
-   therefore be deemed lost by the client, reducing the client's
-   congestion window size.
-
 3.2.  No Support for Split Mode
 
    Under the design discussed in this document, it is impossible to use
@@ -386,14 +361,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
    To address the issues, we might consider specifying a protocol that
    will be used between the client-facing server and the backend server
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 7]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    for communicating the initial_auth_secret and the spare Connection
    IDs.  Note that such protocol can be lightweight, assuming the
    communication between the two servers will be over a virtual private
@@ -417,6 +384,15 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    CHandshake -> CHandshake -> ``` The goal is a successful handshake
    despite injection by the attacker of fake Client Initial packet
    (CInitial') or Server Initial packet (SInitial').
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 7]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    The main defense against forgeries is the HMAC authentication of the
    Initial packets using an ESNI derived key that is not accessible to
@@ -442,14 +418,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    the server create a context associated with the CID, so that when the
    original Client Initial later arrives it gets discarded.
 
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    This attack is mitigated by verifying that the Destination CID of the
    Client Initial matches the hash of the first CRYPTO stream payload.
 
@@ -474,6 +442,14 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    first payload of the CRYPTO stream.  This prevents attackers from
    sending "fake" initial packets that would be processed in the same
    server connection context as the authentic packet.  However, it does
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
+
    not prevent address substitution attacks such as: ``` Client Attacker
    Server
 
@@ -498,14 +474,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    attack in which it obtains a Retry Token for its own address, then
    forwards it to the client: ``` Client Attacker Server
 
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 9]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    CInitial(from A) -> CInitial(from A') -> <- Retry(to A', T(A')) <-
    Retry(to A, T(A')) CInitial2(from A, T(A')) -> CInitial(from A',
    T(A')) ->
@@ -527,6 +495,16 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
               Thomson, M., Ed. and S. Turner, Ed., "Using Transport
               Layer Security (TLS) to Secure QUIC", draft-ietf-quic-
               tls-16 (work in progress), October 2018.
+
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    [QUIC-TRANSPORT]
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
@@ -551,16 +529,6 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
               Rescorla, E., Oku, K., Sullivan, N., and C. Wood,
               "Encrypted Server Name Indication for TLS 1.3", draft-
               ietf-tls-esni-02 (work in progress), October 2018.
-
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019              [Page 10]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
 
 Appendix A.  Acknowledgements
 
@@ -589,28 +557,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019              [Page 11]
+Oku & Huitema           Expires December 29, 2019              [Page 10]

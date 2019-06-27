@@ -295,7 +295,6 @@ ul.toc li {
 <link href="#rfc.section.2.6" rel="Chapter" title="2.6 Retry Packet">
 <link href="#rfc.section.3" rel="Chapter" title="3 Considerations">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Using GCM to Authenticate Initial Packets">
-<link href="#rfc.section.3.1.1" rel="Chapter" title="3.1.1 Rekeying at the Server&#8217;s First Flight">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 No Support for Split Mode">
 <link href="#rfc.section.4" rel="Chapter" title="4 Security Considerations">
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Resisting the duplicate context attack">
@@ -308,7 +307,7 @@ ul.toc li {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.22.3 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.23.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Oku, K. and C. Huitema" />
@@ -396,9 +395,7 @@ ul.toc li {
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Using GCM to Authenticate Initial Packets</a>
 </li>
-<ul><li>3.1.1.   <a href="#rfc.section.3.1.1">Rekeying at the Server&#8217;s First Flight</a>
-</li>
-</ul><li>3.2.   <a href="#rfc.section.3.2">No Support for Split Mode</a>
+<li>3.2.   <a href="#rfc.section.3.2">No Support for Split Mode</a>
 </li>
 </ul><li>4.   <a href="#rfc.section.4">Security Considerations</a>
 </li>
@@ -528,14 +525,6 @@ ul.toc li {
 <p id="rfc.section.3.1.p.2">A server that receives an Initial packet for a new connection will at first decrypt the payload using AES-CTR, derive ESNI shared secret from the Hello message being contained, then use that to verify the GCM tag.</p>
 <p id="rfc.section.3.1.p.3">The benefit of the approach is that we will have less divergence from QUIC version 1.  The downside is that the authentication algorithm would be hard-coded to GCM, and that some AEAD APIs might not provide an interface to handle input in this particular way.</p>
 <p id="rfc.section.3.1.p.4">We can also consider adding a small checksum to the Initial packets so that the server can determine if the packet is corrupt. The downside is that the endpoints would be required to calculate the checksum for Initial packets that carry server&#8217;s messages and ACKs as well, even though the correctness of the packet can be verified using the ordinary procedure of AEAD.</p>
-<h1 id="rfc.section.3.1.1">
-<a href="#rfc.section.3.1.1">3.1.1.</a> <a href="#rekeying-at-the-servers-first-flight" id="rekeying-at-the-servers-first-flight">Rekeying at the Server&#8217;s First Flight</a>
-</h1>
-<p id="rfc.section.3.1.1.p.1">Another approach is to use the Packet Protection method of QUIC version 1 for client&#8217;s first flight, while using the proposed method for all other Initial packets.</p>
-<p id="rfc.section.3.1.1.p.2">The benefit of this approach is that trial decryption can be avoided.</p>
-<p id="rfc.section.3.1.1.p.3">The downside is that a man-on-the-side attacker can stitch the Encrypted SNI extension that the client has sent with anything it wants to construct a spoofed packet, then race it to the server.</p>
-<p id="rfc.section.3.1.1.p.4">The server would be required to consider Initial packets containing non-identical ClientHello messages as belonging to different connection establishment attempts.</p>
-<p id="rfc.section.3.1.1.p.5">The design will also have negative performance impact on connections with high latency.  This is because QUIC expects clients to retransmit the Initial packets when the latency is above 250 milliseconds.  However, the requirement that the server rekeys the Initial secret when receiving the first Initial packet means that the retransmitted Initial packets would become undecryptable and therefore be deemed lost by the client, reducing the client&#8217;s congestion window size.</p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> <a href="#no-support-for-split-mode" id="no-support-for-split-mode">No Support for Split Mode</a>
 </h1>
