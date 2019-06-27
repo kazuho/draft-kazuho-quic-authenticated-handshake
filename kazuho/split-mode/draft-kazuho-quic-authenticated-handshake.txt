@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: June 22, 2019                              Private Octopus Inc.
-                                                       December 19, 2018
+Expires: December 29, 2019                          Private Octopus Inc.
+                                                           June 27, 2019
 
 
                     Authenticated Handshake for QUIC
@@ -33,11 +33,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 22, 2019.
+   This Internet-Draft will expire on December 29, 2019.
 
 Copyright Notice
 
-   Copyright (c) 2018 IETF Trust and the persons identified as the
+   Copyright (c) 2019 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 1]
+Oku & Huitema           Expires December 29, 2019               [Page 1]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 Table of Contents
@@ -80,13 +80,13 @@ Table of Contents
      3.3.  Split Mode  . . . . . . . . . . . . . . . . . . . . . . .   8
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
      4.1.  Resisting the duplicate context attack  . . . . . . . . .   9
-     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   9
+     4.2.  Resisting Address Substitution Attacks  . . . . . . . . .  10
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  11
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  11
    Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  11
      B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 2]
+Oku & Huitema           Expires December 29, 2019               [Page 2]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 1.1.  Notational Conventions
@@ -165,9 +165,9 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 3]
+Oku & Huitema           Expires December 29, 2019               [Page 3]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 2.3.2.  Protection
@@ -221,9 +221,9 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 4]
+Oku & Huitema           Expires December 29, 2019               [Page 4]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 2.5.  Connection Close Packet
@@ -277,9 +277,9 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 5]
+Oku & Huitema           Expires December 29, 2019               [Page 5]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
    Payload of the CRYPTO frame contained in the resent Initial packets
@@ -333,9 +333,9 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 6]
+Oku & Huitema           Expires December 29, 2019               [Page 6]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
    The subsections below discuss alternative approaches that do not
@@ -389,9 +389,9 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
 
 
-Oku & Huitema             Expires June 22, 2019                 [Page 7]
+Oku & Huitema           Expires December 29, 2019               [Page 7]
 
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 3.3.  Split Mode
@@ -403,8 +403,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    o  hmac_key
 
-   o  spare Connection IDs
-
    o  ODCID
 
    Both the fronting server and the hidden server need access to the
@@ -412,16 +410,29 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    key is derived from the shared DH secret of ESNI, it is not
    necessarily available to the hidden server.
 
-   Access to spare Connection IDs is mandatory to support clients
-   migrating to different addresses.  The fronting server, without
-   access to the 1-RTT QUIC frames being exchanged, cannot track the
-   mapping of the Connection IDs that change mid-connection.
-
    ODCID is necessary to decrypt an Initial packet sent in response to a
    Retry.  However, the value is typically available only to the server
    that generates the Retry.  The fronting server and the hidden server
    need to exchange the ODCID, or provide the secret for extracting the
    ODCID from a Retry token.
+
+   Additionally, the following properties need to be exchanged when
+   providing support for connection migration:
+
+   o  client's address tuple
+
+   o  spare Connection IDs
+
+   The fronting server needs to forward the source IP address and port
+   of the incoming packets to the hidden server, so that the hidden
+   server can recognize the migration of the client and respond as
+   required by QUIC version 1.
+
+   The fronting server and the hidden server also need to share the
+   spare Connection IDs being issued to the client using
+   NEW_CONNECTION_ID frames, so that the fronting server can continue
+   forwarding packets to the correct hidden server when the client
+   starts using a new connection ID mid-connection.
 
 4.  Security Considerations
 
@@ -430,6 +441,14 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    "man on the side", which cannot delete packets but can inject packets
    and will always win the race against original packets.  We want to
    enable the following pattern: ```
+
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
 
    Client Attacker Server
 
@@ -442,14 +461,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    The main defense against forgeries is the HMAC authentication of the
    Initial packets using an ESNI derived key that is not accessible to
-
-
-
-Oku & Huitema             Expires June 22, 2019                 [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
-
    the attacker.  This prevents all classes of attacks using forged
    initial packets.  There are however two methods that are still
    available to the attackers:
@@ -487,6 +498,14 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    CRYPTO stream payload.  However, in the retry scenario, the server is
    already rquired to know the Destination CID from the original Client
    Initial packet (ODCID), because it has to echo it in the transport
+
+
+
+Oku & Huitema           Expires December 29, 2019               [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
+
    parameters extension.  The server can then verify that the hash of
    the CRYPTO stream payload matches the ODCID.
 
@@ -498,13 +517,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
    server connection context as the authentic packet.  However, it does
    not prevent address substitution attacks such as: ``` Client Attacker
    Server
-
-
-
-Oku & Huitema             Expires June 22, 2019                 [Page 9]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
    CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ``` In
    this attack, the attacker races a copy of the Initial packet,
@@ -538,6 +550,18 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
 
    TBD
 
+
+
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019              [Page 10]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
+
 6.  Normative References
 
    [AES]      "Advanced encryption standard (AES)", National Institute
@@ -553,14 +577,6 @@ Internet-Draft      Authenticated Handshake for QUIC       December 2018
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
-
-
-
-
-Oku & Huitema             Expires June 22, 2019                [Page 10]
-
-Internet-Draft      Authenticated Handshake for QUIC       December 2018
-
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -591,6 +607,17 @@ B.1.  Since draft-kazuho-quic-authenticated-handshake-00
 
    o  None yet.
 
+
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019              [Page 11]
+
+Internet-Draft      Authenticated Handshake for QUIC           June 2019
+
+
 Authors' Addresses
 
    Kazuho Oku
@@ -613,4 +640,33 @@ Authors' Addresses
 
 
 
-Oku & Huitema             Expires June 22, 2019                [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Oku & Huitema           Expires December 29, 2019              [Page 12]
