@@ -300,38 +300,6 @@ endpoints would be required to calculate the checksum for Initial packets that
 carry server's messages and ACKs as well, even though the correctness of the
 packet can be verified using the ordinary procedure of AEAD.
 
-## Use of Different QUIC Version Number
-
-For this specification, use of a different QUIC version number is not expected
-to have negative impact on user-experience by raising the chance of version
-negotiation, because version negotiation finishes before the client sends it's
-first packet.
-
-Use of Encrypted SNI will stick out more, because it can be identified by
-observing a different version number in the long header packet rather than by
-decrypting the Initial packet to see if the Encrypted SNI extension is in use.
-
-The subsections below discuss alternative approaches that do not change the
-version number of QUIC.
-
-### Trial Decryption
-
-It is possible to use the proposed Packet Protection method without changing
-the version number.  The difference from the recommended method is that the
-server would be required to do "trial decryption."
-
-However, it is not as bad as it sounds, because authentication failure in
-AES-GCM decryption is typically reported after the ciphertext is decrypted.
-
-When accepting a new connection, a QUIC server can at first decrypt the
-Initial packet using AES-GCM.  The packet is a ordinary QUIC version 1 packet
-if it is successfully authenticated.  Otherwise, the server will feed the
-decrypted payload (which would be available anyways) assuming that it contains
-a ClientHello message, and if the TLS stack successfully processes the message
-returning the handshake keys and the ESNI shared key, verify the HMAC to see
-if the packet authenticates.  If it does, the server creates a new connection
-context and responds with an Initial packet.
-
 ### Rekeying at the Server's First Flight
 
 Another approach is to use the Packet Protection method of QUIC version 1 for
