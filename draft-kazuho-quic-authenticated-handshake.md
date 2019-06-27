@@ -344,8 +344,8 @@ window size.
 
 To support server-side deployments using "Split Mode" ([TLS-ESNI]; section 3),
 the following properties need to be exchanged between the fronting server and
-the hidden server, in addition to those required by the Encrypted SNI
-extension:
+the hidden server, in addition to those generally required by a QUIC version 1
+proxy and the Encrypted SNI extension:
 
 * hmac_key
 * ODCID
@@ -359,21 +359,6 @@ ODCID is necessary to decrypt an Initial packet sent in response to a Retry.
 However, the value is typically available only to the server that generates
 the Retry.  The fronting server and the hidden server need to exchange the
 ODCID, or provide the secret for extracting the ODCID from a Retry token.
-
-Additionally, the following properties need to be exchanged when providing
-support for connection migration:
-
-* client's address tuple
-* spare Connection IDs
-
-The fronting server needs to forward the source IP address and port of the
-incoming packets to the hidden server, so that the hidden server can recognize
-the migration of the client and respond as required by QUIC version 1.
-
-The fronting server and the hidden server also need to share the spare
-Connection IDs being issued to the client using NEW_CONNECTION_ID frames, so
-that the fronting server can continue forwarding packets to the correct hidden
-server when the client starts using a new connection ID mid-connection.
 
 # Security Considerations
 
