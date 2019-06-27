@@ -127,25 +127,41 @@ different behavior is defined in this document.
 The long header packets exchanged using this specification carry the QUIC
 version number of 0xXXXXXXXX (TBD).
 
-## The "QUIC-ESNI" TLS Extension
+## The "QUIC-AH" TLS Extension
 
-The QUIC-ESNI TLS Extension indicates the versions of the QUIC protocol that
-the server supports.  The values in the extension SHOULD be identical to what
-would be included in the Version Negotiation packet.
+The QUIC-AH TLS Extension indicates the versions of QUIC supported by the server
+that have the authenticated handshake flavors, along with the versions being
+exposed on the wire for each of those versions.
 
 ~~~
    struct {
-       uint32 supported_versions<4..2^16-4>;
-   } QUIC_ESNI;
+       uint32 base_version;
+       uint32 wire_versions<4..2^16-4>;
+   } SupportedVersion;
+
+   struct {
+       SupportedVersion supported_versions<8..2^16-4>;
+   } QUIC_AH;
 ~~~
 
-A server willing to accept QUIC connections using this specification MUST
-publish ESNI Resource Records that contain the QUIC_ESNI extension including
-the QUIC version number 0xXXXXXXXX.
+This specification defines a variant of QUIC version 1.  Therefore, a ESNI
+Resource Records being published for a server providing support for this
+specification MUST include a QUIC_AH extension that contains a SupportedVersion
+structure with the `base_version` set to 1.
 
-A client MUST NOT initiate a connection establishment attempt specified in
-this document unless it sees a compatible version number in the QUIC_ESNI
+A client MUST NOT initiate a connection establishment attempt specified in this
+document unless it sees a compatible base version number in the QUIC_AH
 extension of the ESNI Resource Record advertised by the server.
+
+The `wire_versions` field indicates the version numbers to be contained in the
+long header packets, for each of the base versions that the server supports.
+The wire versions SHOULD be chosen at random, as the exposure of arbitrary
+version numbers prevents network devices from incorrectly assuming that the
+version numbers are stable.
+
+For each connection establishment attempt, a client SHOULD randomly choose
+one wire version, and the endpoints MUST use long header packets containing the
+chosen wire version throughout that connection establishment attempt.
 
 ## Initial Packet
 
