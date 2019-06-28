@@ -340,26 +340,25 @@ packet means that the retransmitted Initial packets would become undecryptable
 and therefore be deemed lost by the client, reducing the client's congestion
 window size.
 
-## No Support for Split Mode
+## Split Mode
 
-Under the design discussed in this document, it is impossible to use an
-unmodified QUIC server as a backend server in "Split Mode" ([TLS-ESNI];
-section 3) due to the following two reasons:
+To support server-side deployments using "Split Mode" ([TLS-ESNI]; section 3),
+the following properties need to be exchanged between the fronting server and
+the hidden server, in addition to those generally required by a QUIC version 1
+proxy and the Encrypted SNI extension:
 
-* Access to initial_auth_secret is required for generating and validating
-  Initial packets.  However, the backend server, not knowing the ESNI private
-  key, cannot calculate the secret.
+* hmac_key
+* ODCID
 
-* The client-facing server cannot continue forwarding packets to the correct
-  destination when there is a change in Connection ID mid-connection.
+Both the fronting server and the hidden server need access to the hmac_key to
+authenticate the Initial packets.  However, because the key is derived from
+the shared DH secret of ESNI, it is not necessarily available to the hidden
+server.
 
-To address the issues, we might consider specifying a protocol that will be
-used between the client-facing server and the backend server for communicating
-the initial_auth_secret and the spare Connection IDs.  Note that such protocol
-can be lightweight, assuming the communication between the two servers will be
-over a virtual private network.  Such assumption can be made because the
-backend server cannot operate QUIC without access to the source address-port
-tuple of the packets that the client has sent.
+ODCID is necessary to decrypt an Initial packet sent in response to a Retry.
+However, the value is typically available only to the server that generates
+the Retry.  The fronting server and the hidden server need to exchange the
+ODCID, or provide the secret for extracting the ODCID from a Retry token.
 
 # Security Considerations
 
