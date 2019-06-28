@@ -298,7 +298,7 @@ ul.toc li {
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Use of Different QUIC Version Number">
 <link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Trial Decryption">
 <link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Rekeying at the Server&#8217;s First Flight">
-<link href="#rfc.section.3.3" rel="Chapter" title="3.3 No Support for Split Mode">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Split Mode">
 <link href="#rfc.section.4" rel="Chapter" title="4 Security Considerations">
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Resisting the duplicate context attack">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Resisting Address Substitution Attacks">
@@ -310,12 +310,12 @@ ul.toc li {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.15.4 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.23.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Oku, K. and C. Huitema" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-kazuho-quic-authenticated-handshake-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-12-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-06-28" />
   <meta name="dct.abstract" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
   <meta name="description" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
 
@@ -339,12 +339,12 @@ ul.toc li {
 <td class="right">C. Huitema</td>
 </tr>
 <tr>
-<td class="left">Expires: June 22, 2019</td>
+<td class="left">Expires: December 30, 2019</td>
 <td class="right">Private Octopus Inc.</td>
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">December 19, 2018</td>
+<td class="right">June 28, 2019</td>
 </tr>
 
     	
@@ -360,9 +360,9 @@ ul.toc li {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 22, 2019.</p>
+<p>This Internet-Draft will expire on December 30, 2019.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
@@ -404,7 +404,7 @@ ul.toc li {
 </li>
 <li>3.2.2.   <a href="#rfc.section.3.2.2">Rekeying at the Server&#8217;s First Flight</a>
 </li>
-</ul><li>3.3.   <a href="#rfc.section.3.3">No Support for Split Mode</a>
+</ul><li>3.3.   <a href="#rfc.section.3.3">Split Mode</a>
 </li>
 </ul><li>4.   <a href="#rfc.section.4">Security Considerations</a>
 </li>
@@ -548,16 +548,17 @@ ul.toc li {
 <p id="rfc.section.3.2.2.p.4">The server would be required to consider Initial packets containing non-identical ClientHello messages as belonging to different connection establishment attempts.</p>
 <p id="rfc.section.3.2.2.p.5">The design will also have negative performance impact on connections with high latency.  This is because QUIC expects clients to retransmit the Initial packets when the latency is above 250 milliseconds.  However, the requirement that the server rekeys the Initial secret when receiving the first Initial packet means that the retransmitted Initial packets would become undecryptable and therefore be deemed lost by the client, reducing the client&#8217;s congestion window size.</p>
 <h1 id="rfc.section.3.3">
-<a href="#rfc.section.3.3">3.3.</a> <a href="#no-support-for-split-mode" id="no-support-for-split-mode">No Support for Split Mode</a>
+<a href="#rfc.section.3.3">3.3.</a> <a href="#split-mode" id="split-mode">Split Mode</a>
 </h1>
-<p id="rfc.section.3.3.p.1">Under the design discussed in this document, it is impossible to use an unmodified QUIC server as a backend server in &#8220;Split Mode&#8221; (<a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a>; section 3) due to the following two reasons:</p>
+<p id="rfc.section.3.3.p.1">To support server-side deployments using &#8220;Split Mode&#8221; (<a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a>; section 3), the following properties need to be exchanged between the fronting server and the hidden server, in addition to those generally required by a QUIC version 1 proxy and the Encrypted SNI extension:</p>
 <p></p>
 
 <ul>
-<li>Access to initial_auth_secret is required for generating and validating Initial packets.  However, the backend server, not knowing the ESNI private key, cannot calculate the secret.</li>
-<li>The client-facing server cannot continue forwarding packets to the correct destination when there is a change in Connection ID mid-connection.</li>
+<li>hmac_key</li>
+<li>ODCID</li>
 </ul>
-<p id="rfc.section.3.3.p.3">To address the issues, we might consider specifying a protocol that will be used between the client-facing server and the backend server for communicating the initial_auth_secret and the spare Connection IDs.  Note that such protocol can be lightweight, assuming the communication between the two servers will be over a virtual private network.  Such assumption can be made because the backend server cannot operate QUIC without access to the source address-port tuple of the packets that the client has sent.</p>
+<p id="rfc.section.3.3.p.3">Both the fronting server and the hidden server need access to the hmac_key to authenticate the Initial packets.  However, because the key is derived from the shared DH secret of ESNI, it is not necessarily available to the hidden server.</p>
+<p id="rfc.section.3.3.p.4">ODCID is necessary to decrypt an Initial packet sent in response to a Retry.  However, the value is typically available only to the server that generates the Retry.  The fronting server and the hidden server need to exchange the ODCID, or provide the secret for extracting the ODCID from a Retry token.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
