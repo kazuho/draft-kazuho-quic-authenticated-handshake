@@ -30,8 +30,8 @@ normative:
   QUIC-TRANSPORT:
     title: "QUIC: A UDP-Based Multiplexed and Secure Transport"
     seriesinfo:
-      Internet-Draft: draft-ietf-quic-transport-16
-    date: 2018-10-23
+      Internet-Draft: draft-ietf-quic-transport-20
+    date: 2019-04-23
     author:
       -
         ins: J. Iyengar
@@ -44,10 +44,10 @@ normative:
         org: Mozilla
         role: editor
   QUIC-TLS:
-    title: "Using Transport Layer Security (TLS) to Secure QUIC"
+    title: "Using TLS to Secure QUIC"
     seriesinfo:
-      Internet-Draft: draft-ietf-quic-tls-16
-    date: 2018-10-23
+      Internet-Draft: draft-ietf-quic-tls-20
+    date: 2019-04-23
     author:
       -
         ins: M. Thomson
@@ -62,8 +62,8 @@ normative:
   TLS-ESNI:
     title: Encrypted Server Name Indication for TLS 1.3
     seriesinfo:
-      Internet-Draft: draft-ietf-tls-esni-02
-    date: 2018-10-22
+      Internet-Draft: draft-ietf-tls-esni-03
+    date: 2019-03-11
     author:
       -
         ins: E. Rescorla
