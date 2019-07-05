@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: December 29, 2019                          Private Octopus Inc.
-                                                           June 27, 2019
+Expires: January 6, 2020                            Private Octopus Inc.
+                                                           July 05, 2019
 
 
                     Authenticated Handshake for QUIC
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 29, 2019.
+   This Internet-Draft will expire on January 6, 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 1]
+Oku & Huitema            Expires January 6, 2020                [Page 1]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 Table of Contents
@@ -74,7 +74,7 @@ Table of Contents
      2.6.  Retry Packet  . . . . . . . . . . . . . . . . . . . . . .   6
    3.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Using GCM to Authenticate Initial Packets . . . . . . . .   6
-     3.2.  No Support for Split Mode . . . . . . . . . . . . . . . .   7
+     3.2.  Split Mode  . . . . . . . . . . . . . . . . . . . . . . .   7
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
      4.1.  Resisting the duplicate context attack  . . . . . . . . .   8
      4.2.  Resisting Address Substitution Attacks  . . . . . . . . .   8
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 2]
+Oku & Huitema            Expires January 6, 2020                [Page 2]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 1.1.  Notational Conventions
@@ -165,9 +165,9 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 3]
+Oku & Huitema            Expires January 6, 2020                [Page 3]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
    devices from incorrectly assuming that the version numbers are
@@ -221,9 +221,9 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 4]
+Oku & Huitema            Expires January 6, 2020                [Page 4]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
    sixteen (16) bytes.  The hash function being used is the one selected
@@ -277,9 +277,9 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 5]
+Oku & Huitema            Expires January 6, 2020                [Page 5]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
    A client that receives a Connection Close packet before an Initial
@@ -333,9 +333,9 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
 
 
 
-Oku & Huitema           Expires December 29, 2019               [Page 6]
+Oku & Huitema            Expires January 6, 2020                [Page 6]
 
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
    We can also consider adding a small checksum to the Initial packets
@@ -345,28 +345,27 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    well, even though the correctness of the packet can be verified using
    the ordinary procedure of AEAD.
 
-3.2.  No Support for Split Mode
+3.2.  Split Mode
 
-   Under the design discussed in this document, it is impossible to use
-   an unmodified QUIC server as a backend server in "Split Mode"
-   ([TLS-ESNI]; section 3) due to the following two reasons:
+   To support server-side deployments using "Split Mode" ([TLS-ESNI];
+   section 3), the following properties need to be exchanged between the
+   fronting server and the hidden server, in addition to those generally
+   required by a QUIC version 1 proxy and the Encrypted SNI extension:
 
-   o  Access to initial_auth_secret is required for generating and
-      validating Initial packets.  However, the backend server, not
-      knowing the ESNI private key, cannot calculate the secret.
+   o  hmac_key
 
-   o  The client-facing server cannot continue forwarding packets to the
-      correct destination when there is a change in Connection ID mid-
-      connection.
+   o  ODCID
 
-   To address the issues, we might consider specifying a protocol that
-   will be used between the client-facing server and the backend server
-   for communicating the initial_auth_secret and the spare Connection
-   IDs.  Note that such protocol can be lightweight, assuming the
-   communication between the two servers will be over a virtual private
-   network.  Such assumption can be made because the backend server
-   cannot operate QUIC without access to the source address-port tuple
-   of the packets that the client has sent.
+   Both the fronting server and the hidden server need access to the
+   hmac_key to authenticate the Initial packets.  However, because the
+   key is derived from the shared DH secret of ESNI, it is not
+   necessarily available to the hidden server.
+
+   ODCID is necessary to decrypt an Initial packet sent in response to a
+   Retry.  However, the value is typically available only to the server
+   that generates the Retry.  The fronting server and the hidden server
+   need to exchange the ODCID, or provide the secret for extracting the
+   ODCID from a Retry token.
 
 4.  Security Considerations
 
@@ -385,17 +384,16 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    despite injection by the attacker of fake Client Initial packet
    (CInitial') or Server Initial packet (SInitial').
 
-
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 7]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    The main defense against forgeries is the HMAC authentication of the
    Initial packets using an ESNI derived key that is not accessible to
+
+
+
+Oku & Huitema            Expires January 6, 2020                [Page 7]
+
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
+
+
    the attacker.  This prevents all classes of attacks using forged
    initial packets.  There are however two methods that are still
    available to the attackers:
@@ -442,16 +440,15 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
    first payload of the CRYPTO stream.  This prevents attackers from
    sending "fake" initial packets that would be processed in the same
    server connection context as the authentic packet.  However, it does
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 8]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    not prevent address substitution attacks such as: ``` Client Attacker
    Server
+
+
+
+Oku & Huitema            Expires January 6, 2020                [Page 8]
+
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
+
 
    CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ``` In
    this attack, the attacker races a copy of the Initial packet,
@@ -496,20 +493,18 @@ Internet-Draft      Authenticated Handshake for QUIC           June 2019
               Layer Security (TLS) to Secure QUIC", draft-ietf-quic-
               tls-16 (work in progress), October 2018.
 
-
-
-
-
-
-Oku & Huitema           Expires December 29, 2019               [Page 9]
-
-Internet-Draft      Authenticated Handshake for QUIC           June 2019
-
-
    [QUIC-TRANSPORT]
               Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", draft-ietf-quic-
               transport-16 (work in progress), October 2018.
+
+
+
+
+Oku & Huitema            Expires January 6, 2020                [Page 9]
+
+Internet-Draft      Authenticated Handshake for QUIC           July 2019
+
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -557,4 +552,9 @@ Authors' Addresses
 
 
 
-Oku & Huitema           Expires December 29, 2019              [Page 10]
+
+
+
+
+
+Oku & Huitema            Expires January 6, 2020               [Page 10]
