@@ -82,7 +82,8 @@ Table of Contents
    6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  10
    Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  10
-     B.1.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  10
+     B.1.  Since draft-kazuho-quic-authenticated-handshake-01  . . .  10
+     B.2.  Since draft-kazuho-quic-authenticated-handshake-00  . . .  10
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
@@ -101,7 +102,6 @@ Table of Contents
    This document defines a Packet Protection method for Initial packets
    that incorporates the ESNI shared secret, so that spoofed Initial
    packets will be detected and droped.
-
 
 
 
@@ -531,7 +531,11 @@ Appendix A.  Acknowledgements
 
 Appendix B.  Change Log
 
-B.1.  Since draft-kazuho-quic-authenticated-handshake-00
+B.1.  Since draft-kazuho-quic-authenticated-handshake-01
+
+   o  None yet.
+
+B.2.  Since draft-kazuho-quic-authenticated-handshake-00
 
    o  Change DCID to Hash(ClientHello) (#8)
 
@@ -549,10 +553,6 @@ Authors' Addresses
    Fastly
 
    Email: kazuhooku@gmail.com
-
-
-
-
 
 
 
