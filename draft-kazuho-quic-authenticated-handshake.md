@@ -95,15 +95,15 @@ tamper-proof.
 # Introduction
 
 As defined in Secure Using TLS to Secure QUIC [QUIC-TLS], QUIC version 1
-[QUIC-TRANSPORT] protects the payload of every QUIC packet using AEAD making
-the protocol injection- and tamper-proof, with the exception being the Initial
+[QUIC-TRANSPORT] protects the payload of every QUIC packet using AEAD making the
+protocol injection- and tamper-proof, with the exception being the Initial
 packets.  Initial packets are merely obfuscated because there is no shared
-secret between the endpoints when they start sending the Initial packets
-against each other.
+secret between the endpoints when they start sending the Initial packets against
+each other.
 
-However, when Encrypted Server Name Indication for TLS 1.3 [TLS-ESNI] is used,
-a shared secret between the endpoints can be used for authentication from the
-very first packet of the connection.
+However, when Encrypted Server Name Indication for TLS 1.3 [TLS-ESNI] is used, a
+shared secret between the endpoints can be used for authentication from the very
+first packet of the connection.
 
 This document defines a Packet Protection method for Initial packets that
 incorporates the ESNI shared secret, so that spoofed Initial packets will be
@@ -159,8 +159,8 @@ The wire versions SHOULD be chosen at random, as the exposure of arbitrary
 version numbers prevents network devices from incorrectly assuming that the
 version numbers are stable.
 
-For each connection establishment attempt, a client SHOULD randomly choose
-one wire version, and the endpoints MUST use long header packets containing the
+For each connection establishment attempt, a client SHOULD randomly choose one
+wire version, and the endpoints MUST use long header packets containing the
 chosen wire version throughout that connection establishment attempt.
 
 ## Initial Packet
@@ -170,17 +170,16 @@ chosen wire version throughout that connection establishment attempt.
 A server associates an Initial packet to an existing connection using the
 Destination Connection ID, QUIC version, and the five tuple.  If all of the
 values match to that of an existing connection, the packet is processed
-accordingly.  Otherwise, a server MUST handle the packet as potentially
-creating a new connection.
+accordingly.  Otherwise, a server MUST handle the packet as potentially creating
+a new connection.
 
 ### Protection
 
-Initial packets are encrypted and authenticated differently from QUIC version
-1.
+Initial packets are encrypted and authenticated differently from QUIC version 1.
 
 AES {{!AES=DOI.10.6028/NIST.FIPS.197}} in counter (CTR) mode is used for
-encrypting the payload.  The key and iv being used are identical to that of
-QUIC version 1.
+encrypting the payload.  The key and iv being used are identical to that of QUIC
+version 1.
 
 HMAC [RFC2104] is used for authenticating the header.  The message being
 authenticated is the concatenation of the packet header without Header
@@ -194,25 +193,24 @@ shared secret of Encrypted SNI:
                                 digest_size)
 ~~~
 
-The first sixteen (16) octets of the HMAC output replaces the authentication
-tag of QUIC version 1.
+The first sixteen (16) octets of the HMAC output replaces the authentication tag
+of QUIC version 1.
 
-Other types of packets are protected using the Packet Protection method
-defined in QUIC version 1.
+Other types of packets are protected using the Packet Protection method defined
+in QUIC version 1.
 
 ### Destination Connection ID
 
 When establishing a connection, a client MUST initially set the Destination
 Connection ID to the hashed value of the first payload of the CRYPTO stream
-(i.e., the ClientHello message) truncated to first sixteen (16) bytes.  The
-hash function being used is the one selected by Encrypted SNI.
+(i.e., the ClientHello message) truncated to first sixteen (16) bytes.  The hash
+function being used is the one selected by Encrypted SNI.
 
-When processing the first payload carried by a CRYPTO stream, a server MUST,
-in addition to verifying the authentication tag, verify that the truncated
-hash value of the payload is identical to the Destination Connection ID or to
-the original Connection ID recovered from the the Retry Token.  A server MUST
-NOT create or modify connection state if either or both the verification
-fails.
+When processing the first payload carried by a CRYPTO stream, a server MUST, in
+addition to verifying the authentication tag, verify that the truncated hash
+value of the payload is identical to the Destination Connection ID or to the
+original Connection ID recovered from the the Retry Token.  A server MUST NOT
+create or modify connection state if either or both the verification fails.
 
 ## Version Negotiation Packet
 
@@ -247,14 +245,14 @@ bits are set to zero.  Otherwise, the packet is a Retry packet.
 (: #connection-close-format title="Connection Close Packet")
 
 A Connection Close packet is sent by a server when a connection error occurs
-prior to deriving the HMAC key.  In all other conditions, connection close
-MUST be signalled using the CONNECTION_CLOSE frame.
+prior to deriving the HMAC key.  In all other conditions, connection close MUST
+be signalled using the CONNECTION_CLOSE frame.
 
-A client that receives a Connection Close packet before an Initial packet
-SHOULD retain the error code, and continue the connection establishment
-attempt as if it did not see the packet.  When the attempt times out, it MAY
-assume that the error code was a legitimate value sent by the server.  A
-client MAY ignore Connection Close packets.
+A client that receives a Connection Close packet before an Initial packet SHOULD
+retain the error code, and continue the connection establishment attempt as if
+it did not see the packet.  When the attempt times out, it MAY assume that the
+error code was a legitimate value sent by the server.  A client MAY ignore
+Connection Close packets.
 
 ## Retry Packet
 
@@ -262,16 +260,16 @@ A client SHOULD send one Initial packet in response to each Retry packet it
 receives.  The Destination Connection ID of the Initial packet MUST be set to
 the value specified by the Retry packet, however the keys for encrypting and
 authenticating the packet MUST continue to be the original ones.  A server
-sending a Retry packet is expected to include the original Connection ID in
-the Retry Token it emits, and to use the value contained in the token attached
-to the Initial packet for unprotecting the payload.
+sending a Retry packet is expected to include the original Connection ID in the
+Retry Token it emits, and to use the value contained in the token attached to
+the Initial packet for unprotecting the payload.
 
 Payload of the CRYPTO frame contained in the resent Initial packets MUST be
 identical to that of the Initial packet that triggered the retry.
 
 When the client does not receive a valid Initial packet after a handshake
-timeout, it SHOULD send an Initial packet with the Destination Connection ID
-and the token set to the original value.
+timeout, it SHOULD send an Initial packet with the Destination Connection ID and
+the token set to the original value.
 
 A client MUST ignore Retry packets received anterior to an Initial packet that
 successfully authenticates.
@@ -294,8 +292,8 @@ version 1.  The downside is that the authentication algorithm would be
 hard-coded to GCM, and that some AEAD APIs might not provide an interface to
 handle input in this particular way.
 
-We can also consider adding a small checksum to the Initial packets so that
-the server can determine if the packet is corrupt. The downside is that the
+We can also consider adding a small checksum to the Initial packets so that the
+server can determine if the packet is corrupt. The downside is that the
 endpoints would be required to calculate the checksum for Initial packets that
 carry server's messages and ACKs as well, even though the correctness of the
 packet can be verified using the ordinary procedure of AEAD.
@@ -311,21 +309,20 @@ proxy and the Encrypted SNI extension:
 * ODCID
 
 Both the fronting server and the hidden server need access to the hmac_key to
-authenticate the Initial packets.  However, because the key is derived from
-the shared DH secret of ESNI, it is not necessarily available to the hidden
-server.
+authenticate the Initial packets.  However, because the key is derived from the
+shared DH secret of ESNI, it is not necessarily available to the hidden server.
 
 ODCID is necessary to decrypt an Initial packet sent in response to a Retry.
-However, the value is typically available only to the server that generates
-the Retry.  The fronting server and the hidden server need to exchange the
-ODCID, or provide the secret for extracting the ODCID from a Retry token.
+However, the value is typically available only to the server that generates the
+Retry.  The fronting server and the hidden server need to exchange the ODCID, or
+provide the secret for extracting the ODCID from a Retry token.
 
 # Security Considerations
 
-The authenticated handshake is designed to enable successful connections
-even if clients and servers are attacked by a powerful "man on the side",
-which cannot delete packets but can inject packets and will always win the
-race against original packets. We want to enable the following pattern:
+The authenticated handshake is designed to enable successful connections even if
+clients and servers are attacked by a powerful "man on the side", which cannot
+delete packets but can inject packets and will always win the race against
+original packets.i  We want to enable the following pattern:
 ```
 
 Client                  Attacker                Server
@@ -340,15 +337,16 @@ CInitial ->
 CHandshake ->
                         CHandshake ->
 ```
-The goal is a successful handshake despite injection by the attacker
-of fake Client Initial packet (CInitial') or Server Initial packet (SInitial').
+The goal is a successful handshake despite injection by the attacker of fake
+Client Initial packet (CInitial') or Server Initial packet (SInitial').
 
 The main defense against forgeries is the HMAC authentication of the Initial
-packets using an ESNI derived key that is not accessible to the attacker. This
-prevents all classes of attacks using forged initial packets. There are
-however two methods that are still available to the attackers:
+packets using an ESNI derived key that is not accessible to the attacker.  This
+prevents all classes of attacks using forged initial packets. There are however
+two methods that are still available to the attackers:
 
-1) Forge an Initial packet that will claim the same context as the client request,
+1) Forge an Initial packet that will claim the same context as the client
+request,
 
 2) Send duplicates of the client request from a fake source address.
 
@@ -356,16 +354,15 @@ These two attacks and their mitigation are discussed in the next sections.
 
 ## Resisting the duplicate context attack
 
-The attacker mounts a duplicate context attack by observing the original
-Client Initial packet, and then creating its own Client Initial
-packet in which source and destination CID are the same as in the
-original packet. The ESNI secret will be different, because the packet
-is composed by the server. The goal of the attacker is to let the
-server create a context associated with the CID, so that when the
-original Client Initial later arrives it gets discarded.
+The attacker mounts a duplicate context attack by observing the original Client
+Initial packet, and then creating its own Client Initial packet in which source
+and destination CID are the same as in the original packet.  The ESNI secret
+will be different, because the packet is composed by the server.  The goal of
+the attacker is to let the server create a context associated with the CID, so
+that when the original Client Initial later arrives it gets discarded.
 
-This attack is mitigated by verifying that the Destination CID of the
-Client Initial matches the hash of the first CRYPTO stream payload.
+This attack is mitigated by verifying that the Destination CID of the Client
+Initial matches the hash of the first CRYPTO stream payload.
 
 If the server uses address verification, there may be a Retry scenario:
 ```
@@ -378,22 +375,21 @@ CInitial2 (including Token) ->
 
 CHandshake ->
 ```
-The Destination CID of the second Client Initial packet is selected
-by the server, or by a device acting on behalf of the server. This
-destination CID will not match the hash of the CRYPTO stream payload.
-However, in the retry scenario, the server is already rquired to know
-the Destination CID from the original Client Initial packet (ODCID),
-because it has to echo it in the transport parameters extension. The
-server can then verify that the hash of the CRYPTO stream payload
-matches the ODCID.
+The Destination CID of the second Client Initial packet is selected by the
+server, or by a device acting on behalf of the server.  This destination CID
+will not match the hash of the CRYPTO stream payload.  However, in the retry
+scenario, the server is already rquired to know the Destination CID from the
+original Client Initial packet (ODCID), because it has to echo it in the
+transport parameters extension.  The server can then verify that the hash of the
+CRYPTO stream payload matches the ODCID.
 
 ## Resisting Address Substitution Attacks
 
 The DCID of the original Initial packet is defined as the hash of the first
-payload of the CRYPTO stream. This prevents attackers from sending "fake"
-initial packets that would be processed in the same server connection context
-as the authentic packet. However, it does not prevent address substitution
-attacks such as:
+payload of the CRYPTO stream.  This prevents attackers from sending "fake"
+initial packets that would be processed in the same server connection context as
+the authentic packet.  However, it does not prevent address substitution attacks
+such as:
 ```
 Client                  Attacker                Server
 
@@ -401,15 +397,16 @@ CInitial(from A) ->
                         CInitial(from A') ->
                         CInitial(from A)  ->
 ```
-In this attack, the attacker races a copy of the Initial packet, substituting
-a faked value for the client's source address. The goal of the attack is
-to cause the server to associate the fake address with the connection
-context, causing the connection to fail.
+In this attack, the attacker races a copy of the Initial packet, substituting a
+faked value for the client's source address.  The goal of the attack is to cause
+the server to associate the fake address with the connection context, causing
+the connection to fail.
 
 The server cannot prevent this attack by just verifying the HMAC, because the
-address field is not covered by the checksum authentication. To actually mitigate
-the attack, the server needs to create different connection contexts for each
-pair of Initial DCID and source Address. The resulting exchange will be:
+address field is not covered by the checksum authentication.  To actually
+mitigate the attack, the server needs to create different connection contexts
+for each pair of Initial DCID and source Address.  The resulting exchange will
+be:
 ```
 Client                  Attacker                Server
 
@@ -422,9 +419,8 @@ CHandshake-Y ->
 ```
 
 The server behavior is required even if the server uses address verification
-procedures, because the attacker could mount a complex attack in which
-it obtains a Retry Token for its own address, then forwards it to the
-client:
+procedures, because the attacker could mount a complex attack in which it
+obtains a Retry Token for its own address, then forwards it to the client:
 ```
 Client                  Attacker                Server
 
@@ -440,10 +436,11 @@ CInitial2(from A, T(A')) ->
                                                 <- Retry(T(A))
 CInitial3(from A, T(A)) ->
 ```
-At the end of this exchange, the server will have received two valid client initial packets
-that both path address verification and the ESNI based HMAC, and both have the same CRYPTO
-stream initial payload and the same ODCID. If it kept only one of them, the attacker would
-have succeeded in distrupting the connection attempt.
+At the end of this exchange, the server will have received two valid client
+initial packets that both path address verification and the ESNI based HMAC, and
+both have the same CRYPTO stream initial payload and the same ODCID. If it kept
+only one of them, the attacker would have succeeded in distrupting the
+connection attempt.
 
 # IANA Considerations
 
