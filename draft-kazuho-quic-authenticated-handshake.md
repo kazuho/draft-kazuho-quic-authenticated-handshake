@@ -127,25 +127,41 @@ different behavior is defined in this document.
 The long header packets exchanged using this specification carry the QUIC
 version number of 0xXXXXXXXX (TBD).
 
-## The "QUIC-ESNI" TLS Extension
+## The "QUIC-AH" TLS Extension
 
-The QUIC-ESNI TLS Extension indicates the versions of the QUIC protocol that
-the server supports.  The values in the extension SHOULD be identical to what
-would be included in the Version Negotiation packet.
+The QUIC-AH TLS Extension indicates the versions of QUIC supported by the server
+that have the authenticated handshake flavors, along with the versions being
+exposed on the wire for each of those versions.
 
 ~~~
    struct {
-       uint32 supported_versions<4..2^16-4>;
-   } QUIC_ESNI;
+       uint32 base_version;
+       uint32 wire_versions<4..2^16-4>;
+   } SupportedVersion;
+
+   struct {
+       SupportedVersion supported_versions<8..2^16-4>;
+   } QUIC_AH;
 ~~~
 
-A server willing to accept QUIC connections using this specification MUST
-publish ESNI Resource Records that contain the QUIC_ESNI extension including
-the QUIC version number 0xXXXXXXXX.
+This specification defines a variant of QUIC version 1.  Therefore, a ESNI
+Resource Records being published for a server providing support for this
+specification MUST include a QUIC_AH extension that contains a SupportedVersion
+structure with the `base_version` set to 1.
 
-A client MUST NOT initiate a connection establishment attempt specified in
-this document unless it sees a compatible version number in the QUIC_ESNI
+A client MUST NOT initiate a connection establishment attempt specified in this
+document unless it sees a compatible base version number in the QUIC_AH
 extension of the ESNI Resource Record advertised by the server.
+
+The `wire_versions` field indicates the version numbers to be contained in the
+long header packets, for each of the base versions that the server supports.
+The wire versions SHOULD be chosen at random, as the exposure of arbitrary
+version numbers prevents network devices from incorrectly assuming that the
+version numbers are stable.
+
+For each connection establishment attempt, a client SHOULD randomly choose
+one wire version, and the endpoints MUST use long header packets containing the
+chosen wire version throughout that connection establishment attempt.
 
 ## Initial Packet
 
@@ -283,62 +299,6 @@ the server can determine if the packet is corrupt. The downside is that the
 endpoints would be required to calculate the checksum for Initial packets that
 carry server's messages and ACKs as well, even though the correctness of the
 packet can be verified using the ordinary procedure of AEAD.
-
-## Use of Different QUIC Version Number
-
-For this specification, use of a different QUIC version number is not expected
-to have negative impact on user-experience by raising the chance of version
-negotiation, because version negotiation finishes before the client sends it's
-first packet.
-
-Use of Encrypted SNI will stick out more, because it can be identified by
-observing a different version number in the long header packet rather than by
-decrypting the Initial packet to see if the Encrypted SNI extension is in use.
-
-The subsections below discuss alternative approaches that do not change the
-version number of QUIC.
-
-### Trial Decryption
-
-It is possible to use the proposed Packet Protection method without changing
-the version number.  The difference from the recommended method is that the
-server would be required to do "trial decryption."
-
-However, it is not as bad as it sounds, because authentication failure in
-AES-GCM decryption is typically reported after the ciphertext is decrypted.
-
-When accepting a new connection, a QUIC server can at first decrypt the
-Initial packet using AES-GCM.  The packet is a ordinary QUIC version 1 packet
-if it is successfully authenticated.  Otherwise, the server will feed the
-decrypted payload (which would be available anyways) assuming that it contains
-a ClientHello message, and if the TLS stack successfully processes the message
-returning the handshake keys and the ESNI shared key, verify the HMAC to see
-if the packet authenticates.  If it does, the server creates a new connection
-context and responds with an Initial packet.
-
-### Rekeying at the Server's First Flight
-
-Another approach is to use the Packet Protection method of QUIC version 1 for
-client's first flight, while using the proposed method for all other Initial
-packets.
-
-The benefit of this approach is that trial decryption can be avoided.
-
-The downside is that a man-on-the-side attacker can stitch the Encrypted SNI
-extension that the client has sent with anything it wants to construct a
-spoofed packet, then race it to the server.
-
-The server would be required to consider Initial packets containing
-non-identical ClientHello messages as belonging to different connection
-establishment attempts.
-
-The design will also have negative performance impact on connections with high
-latency.  This is because QUIC expects clients to retransmit the Initial
-packets when the latency is above 250 milliseconds.  However, the requirement
-that the server rekeys the Initial secret when receiving the first Initial
-packet means that the retransmitted Initial packets would become undecryptable
-and therefore be deemed lost by the client, reducing the client's congestion
-window size.
 
 ## Split Mode
 
