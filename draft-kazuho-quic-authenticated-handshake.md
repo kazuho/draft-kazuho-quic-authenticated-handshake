@@ -1,6 +1,6 @@
 ---
 title: Authenticated Handshake for QUIC
-docname: draft-kazuho-quic-authenticated-handshake-01
+docname: draft-kazuho-quic-authenticated-handshake-latest
 category: exp
 
 ipr: trust200902
@@ -453,6 +453,10 @@ TBD
 TBD
 
 # Change Log
+
+## Since draft-kazuho-quic-authenticated-handshake-01
+
+* None yet.
 
 ## Since draft-kazuho-quic-authenticated-handshake-00
 
