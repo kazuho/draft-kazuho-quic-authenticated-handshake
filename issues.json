@@ -1,6 +1,54 @@
 [
 
   {
+    "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/15",
+    "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
+    "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/15/labels{/name}",
+    "comments_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/15/comments",
+    "events_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/15/events",
+    "html_url": "https://github.com/kazuho/draft-kazuho-quic-authenticated-handshake/issues/15",
+    "id": 463924836,
+    "node_id": "MDU6SXNzdWU0NjM5MjQ4MzY=",
+    "number": 15,
+    "title": "Simpler redesign?",
+    "user": {
+      "login": "huitema",
+      "id": 7464128,
+      "node_id": "MDQ6VXNlcjc0NjQxMjg=",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7464128?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/huitema",
+      "html_url": "https://github.com/huitema",
+      "followers_url": "https://api.github.com/users/huitema/followers",
+      "following_url": "https://api.github.com/users/huitema/following{/other_user}",
+      "gists_url": "https://api.github.com/users/huitema/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/huitema/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/huitema/subscriptions",
+      "organizations_url": "https://api.github.com/users/huitema/orgs",
+      "repos_url": "https://api.github.com/users/huitema/repos",
+      "events_url": "https://api.github.com/users/huitema/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/huitema/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [
+
+    ],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2019-07-03T19:49:20Z",
+    "updated_at": "2019-07-03T21:34:05Z",
+    "closed_at": null,
+    "author_association": "COLLABORATOR",
+    "body": "I am trying to implement this, and I think that the current proposal is too complicated. The root cause of handshake issues is that the \"initial\" packets cannot be trusted. The design question is then, how do we ensure that they are not spoofed by third parties. This requires an authentication token.\r\n\r\nFor the first packet, from client to server, the current draft suggests that `ODCID=H(crypto)` and `AEAD=F(content, initial salt, ESNI secret)`. I think this is too complex. How about just specifying: `ODCID=H(SCID|PAYLOAD|Secret)`? We get the same security, but we avoid the need to overtake the AEAD. It can remain as specified in V1.\r\n\r\nFor the other Initial packets, we need to carry a proof of the form `H(scid, dcid, sequence,payload)`. Instead of carrying that proof in a redefined AEAD, why not carry it in the Initial Token? There is a sufficient size, and we expect the packets to carry an arbitrary binary value.\r\n\r\nThe main problem is, how to split use of the token field between connectivity tests and proof of ownership? Specifically, how to handle:\r\n```\r\nInitial (seq= 0) ==>\r\n        <== Retry (token)\r\nInitail (seq=1, retry-token) ==>\r\n```\r\nHow do we know that the token in the second initial packet is a retry token, and not a proof of origin token? I think the server can find out quickly, at worse with a trial decrypt of the token.\r\n\r\nApart from that, there is no ambiguity."
+  },
+  {
     "url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14",
     "repository_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake",
     "labels_url": "https://api.github.com/repos/kazuho/draft-kazuho-quic-authenticated-handshake/issues/14/labels{/name}",
@@ -95,9 +143,9 @@
 
     ],
     "milestone": null,
-    "comments": 1,
+    "comments": 3,
     "created_at": "2019-06-27T04:28:05Z",
-    "updated_at": "2019-06-27T11:58:08Z",
+    "updated_at": "2019-07-05T03:28:43Z",
     "closed_at": null,
     "author_association": "OWNER",
     "pull_request": {
