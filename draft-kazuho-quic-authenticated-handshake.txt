@@ -372,7 +372,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    The authenticated handshake is designed to enable successful
    connections even if clients and servers are attacked by a powerful
    "man on the side", which cannot delete packets but can inject packets
-   and will always win the race against original packets.  We want to
+   and will always win the race against original packets.i We want to
    enable the following pattern: ```
 
    Client Attacker Server
@@ -395,7 +395,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
    the attacker.  This prevents all classes of attacks using forged
-   initial packets.  There are however two methods that are still
+   Initial packets.  There are however two methods that are still
    available to the attackers:
 
    1) Forge an Initial packet that will claim the same context as the
@@ -438,7 +438,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
    The DCID of the original Initial packet is defined as the hash of the
    first payload of the CRYPTO stream.  This prevents attackers from
-   sending "fake" initial packets that would be processed in the same
+   sending "fake" Initial packets that would be processed in the same
    server connection context as the authentic packet.  However, it does
    not prevent address substitution attacks such as: ``` Client Attacker
    Server
@@ -476,7 +476,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    T(A')) ->
 
                     CInitial(from A)  ->
-                                            <- Retry(T(A)) CInitial3(from A, T(A)) -> ``` At the end of this exchange, the server will have received two valid client initial packets that both path address verification and the ESNI based HMAC, and both have the same CRYPTO stream initial payload and the same ODCID. If it kept only one of them, the attacker would have succeeded in distrupting the connection attempt.
+                                            <- Retry(T(A)) CInitial3(from A, T(A)) -> ``` At the end of this exchange, the server will have received two valid client Initial packets that both path address verification and the ESNI based HMAC, and both have the same CRYPTO stream initial payload and the same ODCID. If it kept only one of them, the attacker would have succeeded in distrupting the connection attempt.
 
 5.  IANA Considerations
 
