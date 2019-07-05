@@ -342,7 +342,7 @@ Client Initial packet (CInitial') or Server Initial packet (SInitial').
 
 The main defense against forgeries is the HMAC authentication of the Initial
 packets using an ESNI derived key that is not accessible to the attacker.  This
-prevents all classes of attacks using forged initial packets. There are however
+prevents all classes of attacks using forged Initial packets. There are however
 two methods that are still available to the attackers:
 
 1) Forge an Initial packet that will claim the same context as the client
@@ -387,7 +387,7 @@ CRYPTO stream payload matches the ODCID.
 
 The DCID of the original Initial packet is defined as the hash of the first
 payload of the CRYPTO stream.  This prevents attackers from sending "fake"
-initial packets that would be processed in the same server connection context as
+Initial packets that would be processed in the same server connection context as
 the authentic packet.  However, it does not prevent address substitution attacks
 such as:
 ```
@@ -437,7 +437,7 @@ CInitial2(from A, T(A')) ->
 CInitial3(from A, T(A)) ->
 ```
 At the end of this exchange, the server will have received two valid client
-initial packets that both path address verification and the ESNI based HMAC, and
+Initial packets that both path address verification and the ESNI based HMAC, and
 both have the same CRYPTO stream initial payload and the same ODCID. If it kept
 only one of them, the attacker would have succeeded in distrupting the
 connection attempt.
