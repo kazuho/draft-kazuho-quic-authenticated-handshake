@@ -285,7 +285,7 @@ ul.toc li {
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Notational Conventions">
 <link href="#rfc.section.2" rel="Chapter" title="2 Differences from QUIC version 1">
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Protocol Version Number">
-<link href="#rfc.section.2.2" rel="Chapter" title="2.2 The &#8220;QUIC-ESNI&#8221; TLS Extension">
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 The &#8220;QUIC-AH&#8221; TLS Extension">
 <link href="#rfc.section.2.3" rel="Chapter" title="2.3 Initial Packet">
 <link href="#rfc.section.2.3.1" rel="Chapter" title="2.3.1 Mapping to Connections">
 <link href="#rfc.section.2.3.2" rel="Chapter" title="2.3.2 Protection">
@@ -295,10 +295,7 @@ ul.toc li {
 <link href="#rfc.section.2.6" rel="Chapter" title="2.6 Retry Packet">
 <link href="#rfc.section.3" rel="Chapter" title="3 Considerations">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Using GCM to Authenticate Initial Packets">
-<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Use of Different QUIC Version Number">
-<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Trial Decryption">
-<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Rekeying at the Server&#8217;s First Flight">
-<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Split Mode">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Split Mode">
 <link href="#rfc.section.4" rel="Chapter" title="4 Security Considerations">
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Resisting the duplicate context attack">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Resisting Address Substitution Attacks">
@@ -315,7 +312,7 @@ ul.toc li {
 
   <meta name="dct.creator" content="Oku, K. and C. Huitema" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-kazuho-quic-authenticated-handshake-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2019-06-28" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-07-05" />
   <meta name="dct.abstract" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
   <meta name="description" content="This document explains a variant of QUIC protocol version 1 that uses the ESNI Keys to authenticate the Initial packets thereby making the entire handshake tamper-proof." />
 
@@ -339,12 +336,12 @@ ul.toc li {
 <td class="right">C. Huitema</td>
 </tr>
 <tr>
-<td class="left">Expires: December 30, 2019</td>
+<td class="left">Expires: January 6, 2020</td>
 <td class="right">Private Octopus Inc.</td>
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 28, 2019</td>
+<td class="right">July 05, 2019</td>
 </tr>
 
     	
@@ -360,7 +357,7 @@ ul.toc li {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 30, 2019.</p>
+<p>This Internet-Draft will expire on January 6, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -378,7 +375,7 @@ ul.toc li {
 </li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Protocol Version Number</a>
 </li>
-<li>2.2.   <a href="#rfc.section.2.2">The &#8220;QUIC-ESNI&#8221; TLS Extension</a>
+<li>2.2.   <a href="#rfc.section.2.2">The &#8220;QUIC-AH&#8221; TLS Extension</a>
 </li>
 <li>2.3.   <a href="#rfc.section.2.3">Initial Packet</a>
 </li>
@@ -398,13 +395,7 @@ ul.toc li {
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Using GCM to Authenticate Initial Packets</a>
 </li>
-<li>3.2.   <a href="#rfc.section.3.2">Use of Different QUIC Version Number</a>
-</li>
-<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Trial Decryption</a>
-</li>
-<li>3.2.2.   <a href="#rfc.section.3.2.2">Rekeying at the Server&#8217;s First Flight</a>
-</li>
-</ul><li>3.3.   <a href="#rfc.section.3.3">Split Mode</a>
+<li>3.2.   <a href="#rfc.section.3.2">Split Mode</a>
 </li>
 </ul><li>4.   <a href="#rfc.section.4">Security Considerations</a>
 </li>
@@ -448,16 +439,23 @@ ul.toc li {
 </h1>
 <p id="rfc.section.2.1.p.1">The long header packets exchanged using this specification carry the QUIC version number of 0xXXXXXXXX (TBD).</p>
 <h1 id="rfc.section.2.2">
-<a href="#rfc.section.2.2">2.2.</a> <a href="#the-quic-esni-tls-extension" id="the-quic-esni-tls-extension">The &#8220;QUIC-ESNI&#8221; TLS Extension</a>
+<a href="#rfc.section.2.2">2.2.</a> <a href="#the-quic-ah-tls-extension" id="the-quic-ah-tls-extension">The &#8220;QUIC-AH&#8221; TLS Extension</a>
 </h1>
-<p id="rfc.section.2.2.p.1">The QUIC-ESNI TLS Extension indicates the versions of the QUIC protocol that the server supports.  The values in the extension SHOULD be identical to what would be included in the Version Negotiation packet.</p>
+<p id="rfc.section.2.2.p.1">The QUIC-AH TLS Extension indicates the versions of QUIC supported by the server that have the authenticated handshake flavors, along with the versions being exposed on the wire for each of those versions.</p>
 <pre>
    struct {
-       uint32 supported_versions&lt;4..2^16-4&gt;;
-   } QUIC_ESNI;
+       uint32 base_version;
+       uint32 wire_versions&lt;4..2^16-4&gt;;
+   } SupportedVersion;
+
+   struct {
+       SupportedVersion supported_versions&lt;8..2^16-4&gt;;
+   } QUIC_AH;
 </pre>
-<p id="rfc.section.2.2.p.2">A server willing to accept QUIC connections using this specification MUST publish ESNI Resource Records that contain the QUIC_ESNI extension including the QUIC version number 0xXXXXXXXX.</p>
-<p id="rfc.section.2.2.p.3">A client MUST NOT initiate a connection establishment attempt specified in this document unless it sees a compatible version number in the QUIC_ESNI extension of the ESNI Resource Record advertised by the server.</p>
+<p id="rfc.section.2.2.p.2">This specification defines a variant of QUIC version 1.  Therefore, a ESNI Resource Records being published for a server providing support for this specification MUST include a QUIC_AH extension that contains a SupportedVersion structure with the <samp>base_version</samp> set to 1.</p>
+<p id="rfc.section.2.2.p.3">A client MUST NOT initiate a connection establishment attempt specified in this document unless it sees a compatible base version number in the QUIC_AH extension of the ESNI Resource Record advertised by the server.</p>
+<p id="rfc.section.2.2.p.4">The <samp>wire_versions</samp> field indicates the version numbers to be contained in the long header packets, for each of the base versions that the server supports.  The wire versions SHOULD be chosen at random, as the exposure of arbitrary version numbers prevents network devices from incorrectly assuming that the version numbers are stable.</p>
+<p id="rfc.section.2.2.p.5">For each connection establishment attempt, a client SHOULD randomly choose one wire version, and the endpoints MUST use long header packets containing the chosen wire version throughout that connection establishment attempt.</p>
 <h1 id="rfc.section.2.3">
 <a href="#rfc.section.2.3">2.3.</a> <a href="#initial-packet" id="initial-packet">Initial Packet</a>
 </h1>
@@ -528,37 +526,17 @@ ul.toc li {
 <p id="rfc.section.3.1.p.3">The benefit of the approach is that we will have less divergence from QUIC version 1.  The downside is that the authentication algorithm would be hard-coded to GCM, and that some AEAD APIs might not provide an interface to handle input in this particular way.</p>
 <p id="rfc.section.3.1.p.4">We can also consider adding a small checksum to the Initial packets so that the server can determine if the packet is corrupt. The downside is that the endpoints would be required to calculate the checksum for Initial packets that carry server&#8217;s messages and ACKs as well, even though the correctness of the packet can be verified using the ordinary procedure of AEAD.</p>
 <h1 id="rfc.section.3.2">
-<a href="#rfc.section.3.2">3.2.</a> <a href="#use-of-different-quic-version-number" id="use-of-different-quic-version-number">Use of Different QUIC Version Number</a>
+<a href="#rfc.section.3.2">3.2.</a> <a href="#split-mode" id="split-mode">Split Mode</a>
 </h1>
-<p id="rfc.section.3.2.p.1">For this specification, use of a different QUIC version number is not expected to have negative impact on user-experience by raising the chance of version negotiation, because version negotiation finishes before the client sends it&#8217;s first packet.</p>
-<p id="rfc.section.3.2.p.2">Use of Encrypted SNI will stick out more, because it can be identified by observing a different version number in the long header packet rather than by decrypting the Initial packet to see if the Encrypted SNI extension is in use.</p>
-<p id="rfc.section.3.2.p.3">The subsections below discuss alternative approaches that do not change the version number of QUIC.</p>
-<h1 id="rfc.section.3.2.1">
-<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#trial-decryption" id="trial-decryption">Trial Decryption</a>
-</h1>
-<p id="rfc.section.3.2.1.p.1">It is possible to use the proposed Packet Protection method without changing the version number.  The difference from the recommended method is that the server would be required to do &#8220;trial decryption.&#8221;</p>
-<p id="rfc.section.3.2.1.p.2">However, it is not as bad as it sounds, because authentication failure in AES-GCM decryption is typically reported after the ciphertext is decrypted.</p>
-<p id="rfc.section.3.2.1.p.3">When accepting a new connection, a QUIC server can at first decrypt the Initial packet using AES-GCM.  The packet is a ordinary QUIC version 1 packet if it is successfully authenticated.  Otherwise, the server will feed the decrypted payload (which would be available anyways) assuming that it contains a ClientHello message, and if the TLS stack successfully processes the message returning the handshake keys and the ESNI shared key, verify the HMAC to see if the packet authenticates.  If it does, the server creates a new connection context and responds with an Initial packet.</p>
-<h1 id="rfc.section.3.2.2">
-<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#rekeying-at-the-servers-first-flight" id="rekeying-at-the-servers-first-flight">Rekeying at the Server&#8217;s First Flight</a>
-</h1>
-<p id="rfc.section.3.2.2.p.1">Another approach is to use the Packet Protection method of QUIC version 1 for client&#8217;s first flight, while using the proposed method for all other Initial packets.</p>
-<p id="rfc.section.3.2.2.p.2">The benefit of this approach is that trial decryption can be avoided.</p>
-<p id="rfc.section.3.2.2.p.3">The downside is that a man-on-the-side attacker can stitch the Encrypted SNI extension that the client has sent with anything it wants to construct a spoofed packet, then race it to the server.</p>
-<p id="rfc.section.3.2.2.p.4">The server would be required to consider Initial packets containing non-identical ClientHello messages as belonging to different connection establishment attempts.</p>
-<p id="rfc.section.3.2.2.p.5">The design will also have negative performance impact on connections with high latency.  This is because QUIC expects clients to retransmit the Initial packets when the latency is above 250 milliseconds.  However, the requirement that the server rekeys the Initial secret when receiving the first Initial packet means that the retransmitted Initial packets would become undecryptable and therefore be deemed lost by the client, reducing the client&#8217;s congestion window size.</p>
-<h1 id="rfc.section.3.3">
-<a href="#rfc.section.3.3">3.3.</a> <a href="#split-mode" id="split-mode">Split Mode</a>
-</h1>
-<p id="rfc.section.3.3.p.1">To support server-side deployments using &#8220;Split Mode&#8221; (<a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a>; section 3), the following properties need to be exchanged between the fronting server and the hidden server, in addition to those generally required by a QUIC version 1 proxy and the Encrypted SNI extension:</p>
+<p id="rfc.section.3.2.p.1">To support server-side deployments using &#8220;Split Mode&#8221; (<a href="#TLS-ESNI" class="xref">[TLS-ESNI]</a>; section 3), the following properties need to be exchanged between the fronting server and the hidden server, in addition to those generally required by a QUIC version 1 proxy and the Encrypted SNI extension:</p>
 <p></p>
 
 <ul>
 <li>hmac_key</li>
 <li>ODCID</li>
 </ul>
-<p id="rfc.section.3.3.p.3">Both the fronting server and the hidden server need access to the hmac_key to authenticate the Initial packets.  However, because the key is derived from the shared DH secret of ESNI, it is not necessarily available to the hidden server.</p>
-<p id="rfc.section.3.3.p.4">ODCID is necessary to decrypt an Initial packet sent in response to a Retry.  However, the value is typically available only to the server that generates the Retry.  The fronting server and the hidden server need to exchange the ODCID, or provide the secret for extracting the ODCID from a Retry token.</p>
+<p id="rfc.section.3.2.p.3">Both the fronting server and the hidden server need access to the hmac_key to authenticate the Initial packets.  However, because the key is derived from the shared DH secret of ESNI, it is not necessarily available to the hidden server.</p>
+<p id="rfc.section.3.2.p.4">ODCID is necessary to decrypt an Initial packet sent in response to a Retry.  However, the value is typically available only to the server that generates the Retry.  The fronting server and the hidden server need to exchange the ODCID, or provide the secret for extracting the ODCID from a Retry token.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
