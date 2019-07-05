@@ -459,4 +459,8 @@ TBD
 
 ## Since draft-kazuho-quic-authenticated-handshake-00
 
-* None yet.
+* Change DCID to Hash(ClientHello) (#8)
+* Describe attacks (#12)
+* Describe how Initial packets are mapped to connections (#10)
+* Clarify the requirements to support split mode (#11)
+* Version number greasing (#13)
