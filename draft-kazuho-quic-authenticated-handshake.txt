@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: January 6, 2020                            Private Octopus Inc.
-                                                           July 05, 2019
+Expires: January 10, 2020                           Private Octopus Inc.
+                                                           July 09, 2019
 
 
                     Authenticated Handshake for QUIC
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 6, 2020.
+   This Internet-Draft will expire on January 10, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 1]
+Oku & Huitema           Expires January 10, 2020                [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 2]
+Oku & Huitema           Expires January 10, 2020                [Page 2]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -165,7 +165,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 3]
+Oku & Huitema           Expires January 10, 2020                [Page 3]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -221,7 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 4]
+Oku & Huitema           Expires January 10, 2020                [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 5]
+Oku & Huitema           Expires January 10, 2020                [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 6]
+Oku & Huitema           Expires January 10, 2020                [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -373,14 +373,14 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    connections even if clients and servers are attacked by a powerful
    "man on the side", which cannot delete packets but can inject packets
    and will always win the race against original packets.i We want to
-   enable the following pattern: ```
+   enable the following pattern: ~~~
 
    Client Attacker Server
 
    CInitial -> CInitial' -> CInitial -> <- SInitial <- SInitial' <-
    SInitial
 
-   CHandshake -> CHandshake -> ``` The goal is a successful handshake
+   CHandshake -> CHandshake -> ~~~ The goal is a successful handshake
    despite injection by the attacker of fake Client Initial packet
    (CInitial') or Server Initial packet (SInitial').
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 7]
+Oku & Huitema           Expires January 10, 2020                [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -420,12 +420,12 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    Client Initial matches the hash of the first CRYPTO stream payload.
 
    If the server uses address verification, there may be a Retry
-   scenario: ``` Client Attacker Server
+   scenario: ~~~ Client Attacker Server
 
    CInitial -> <- Retry (with Token) CInitial2 (including Token) -> <-
    Sinitial
 
-   CHandshake -> ``` The Destination CID of the second Client Initial
+   CHandshake -> ~~~ The Destination CID of the second Client Initial
    packet is selected by the server, or by a device acting on behalf of
    the server.  This destination CID will not match the hash of the
    CRYPTO stream payload.  However, in the retry scenario, the server is
@@ -440,17 +440,17 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    first payload of the CRYPTO stream.  This prevents attackers from
    sending "fake" Initial packets that would be processed in the same
    server connection context as the authentic packet.  However, it does
-   not prevent address substitution attacks such as: ``` Client Attacker
+   not prevent address substitution attacks such as: ~~~ Client Attacker
    Server
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 8]
+Oku & Huitema           Expires January 10, 2020                [Page 8]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
-   CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ``` In
+   CInitial(from A) -> CInitial(from A') -> CInitial(from A) -> ~~~ In
    this attack, the attacker races a copy of the Initial packet,
    substituting a faked value for the client's source address.  The goal
    of the attack is to cause the server to associate the fake address
@@ -460,23 +460,23 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
    because the address field is not covered by the checksum
    authentication.  To actually mitigate the attack, the server needs to
    create different connection contexts for each pair of Initial DCID
-   and source Address.  The resulting exchange will be: ``` Client
+   and source Address.  The resulting exchange will be: ~~~ Client
    Attacker Server
 
    CInitial(from A) -> CInitial(A') -> <- SInitial-X(to A') CInitial(A)
-   -> <- SInitial-Y(to A) CHandshake-Y -> ```
+   -> <- SInitial-Y(to A) CHandshake-Y -> ~~~
 
    The server behavior is required even if the server uses address
    verification procedures, because the attacker could mount a complex
    attack in which it obtains a Retry Token for its own address, then
-   forwards it to the client: ``` Client Attacker Server
+   forwards it to the client: ~~~ Client Attacker Server
 
    CInitial(from A) -> CInitial(from A') -> <- Retry(to A', T(A')) <-
    Retry(to A, T(A')) CInitial2(from A, T(A')) -> CInitial(from A',
    T(A')) ->
 
                     CInitial(from A)  ->
-                                            <- Retry(T(A)) CInitial3(from A, T(A)) -> ``` At the end of this exchange, the server will have received two valid client Initial packets that both path address verification and the ESNI based HMAC, and both have the same CRYPTO stream initial payload and the same ODCID. If it kept only one of them, the attacker would have succeeded in distrupting the connection attempt.
+                                            <- Retry(T(A)) CInitial3(from A, T(A)) -> ~~~ At the end of this exchange, the server will have received two valid client Initial packets that both path address verification and the ESNI based HMAC, and both have the same CRYPTO stream initial payload and the same ODCID. If it kept only one of them, the attacker would have succeeded in distrupting the connection attempt.
 
 5.  IANA Considerations
 
@@ -501,7 +501,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 9]
+Oku & Huitema           Expires January 10, 2020                [Page 9]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -557,7 +557,7 @@ Authors' Addresses
 
 
 
-Oku & Huitema            Expires January 6, 2020               [Page 10]
+Oku & Huitema           Expires January 10, 2020               [Page 10]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -613,4 +613,4 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020               [Page 11]
+Oku & Huitema           Expires January 10, 2020               [Page 11]
