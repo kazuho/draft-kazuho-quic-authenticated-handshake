@@ -5,8 +5,8 @@
 QUIC                                                              K. Oku
 Internet-Draft                                                    Fastly
 Intended status: Experimental                                 C. Huitema
-Expires: January 6, 2020                            Private Octopus Inc.
-                                                           July 05, 2019
+Expires: January 10, 2020                           Private Octopus Inc.
+                                                           July 09, 2019
 
 
                     Authenticated Handshake for QUIC
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 6, 2020.
+   This Internet-Draft will expire on January 10, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 1]
+Oku & Huitema           Expires January 10, 2020                [Page 1]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 2]
+Oku & Huitema           Expires January 10, 2020                [Page 2]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -165,7 +165,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 3]
+Oku & Huitema           Expires January 10, 2020                [Page 3]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -221,7 +221,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 4]
+Oku & Huitema           Expires January 10, 2020                [Page 4]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -277,7 +277,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 5]
+Oku & Huitema           Expires January 10, 2020                [Page 5]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -333,7 +333,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 6]
+Oku & Huitema           Expires January 10, 2020                [Page 6]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -389,7 +389,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 7]
+Oku & Huitema           Expires January 10, 2020                [Page 7]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -445,7 +445,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 8]
+Oku & Huitema           Expires January 10, 2020                [Page 8]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -501,7 +501,7 @@ Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
 
 
-Oku & Huitema            Expires January 6, 2020                [Page 9]
+Oku & Huitema           Expires January 10, 2020                [Page 9]
 
 Internet-Draft      Authenticated Handshake for QUIC           July 2019
 
@@ -557,4 +557,4 @@ Authors' Addresses
 
 
 
-Oku & Huitema            Expires January 6, 2020               [Page 10]
+Oku & Huitema           Expires January 10, 2020               [Page 10]
