@@ -323,7 +323,7 @@ The authenticated handshake is designed to enable successful connections even if
 clients and servers are attacked by a powerful "man on the side", which cannot
 delete packets but can inject packets and will always win the race against
 original packets.i  We want to enable the following pattern:
-```
+~~~
 
 Client                  Attacker                Server
 
@@ -336,7 +336,7 @@ CInitial ->
 
 CHandshake ->
                         CHandshake ->
-```
+~~~
 The goal is a successful handshake despite injection by the attacker of fake
 Client Initial packet (CInitial') or Server Initial packet (SInitial').
 
@@ -365,7 +365,7 @@ This attack is mitigated by verifying that the Destination CID of the Client
 Initial matches the hash of the first CRYPTO stream payload.
 
 If the server uses address verification, there may be a Retry scenario:
-```
+~~~
 Client                  Attacker                Server
 
 CInitial ->
@@ -374,7 +374,7 @@ CInitial2 (including Token) ->
                                             <- Sinitial
 
 CHandshake ->
-```
+~~~
 The Destination CID of the second Client Initial packet is selected by the
 server, or by a device acting on behalf of the server.  This destination CID
 will not match the hash of the CRYPTO stream payload.  However, in the retry
@@ -390,13 +390,13 @@ payload of the CRYPTO stream.  This prevents attackers from sending "fake"
 Initial packets that would be processed in the same server connection context as
 the authentic packet.  However, it does not prevent address substitution attacks
 such as:
-```
+~~~
 Client                  Attacker                Server
 
 CInitial(from A) ->
                         CInitial(from A') ->
                         CInitial(from A)  ->
-```
+~~~
 In this attack, the attacker races a copy of the Initial packet, substituting a
 faked value for the client's source address.  The goal of the attack is to cause
 the server to associate the fake address with the connection context, causing
@@ -407,7 +407,7 @@ address field is not covered by the checksum authentication.  To actually
 mitigate the attack, the server needs to create different connection contexts
 for each pair of Initial DCID and source Address.  The resulting exchange will
 be:
-```
+~~~
 Client                  Attacker                Server
 
 CInitial(from A) ->
@@ -416,12 +416,12 @@ CInitial(from A) ->
                         CInitial(A)  ->
                                                      <- SInitial-Y(to A)
 CHandshake-Y ->
-```
+~~~
 
 The server behavior is required even if the server uses address verification
 procedures, because the attacker could mount a complex attack in which it
 obtains a Retry Token for its own address, then forwards it to the client:
-```
+~~~
 Client                  Attacker                Server
 
 CInitial(from A) ->
@@ -435,7 +435,7 @@ CInitial2(from A, T(A')) ->
                         CInitial(from A)  ->
                                                 <- Retry(T(A))
 CInitial3(from A, T(A)) ->
-```
+~~~
 At the end of this exchange, the server will have received two valid client
 Initial packets that both path address verification and the ESNI based HMAC, and
 both have the same CRYPTO stream initial payload and the same ODCID. If it kept
